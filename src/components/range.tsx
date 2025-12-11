@@ -32,7 +32,7 @@ export const Range = ({ selectedRange, onRangeChange, children, isComparison }: 
       flex={1}
       style={{ borderRight: isComparison ? '' : '1px solid #c6c6c6' }}
     >
-      <Group align="center" justify="space-between" gap={0}>
+      <Group align="center" justify="space-between" gap={0} flex={1}>
         <Combobox
           store={rangeCombobox}
           onOptionSubmit={(value) => {
@@ -41,7 +41,13 @@ export const Range = ({ selectedRange, onRangeChange, children, isComparison }: 
           }}
         >
           <Combobox.Target>
-            <Group justify="space-between" wrap="nowrap" gap="xs">
+            <Group
+              onClick={() => rangeCombobox.toggleDropdown()}
+              justify="space-between"
+              wrap="nowrap"
+              gap="xs"
+              flex={1}
+            >
               <Text size="sm" c="gray.7">
                 {rangeLabels[selectedRange]}
               </Text>
