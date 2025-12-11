@@ -6,22 +6,15 @@ import { MetricWeight } from './metrics/metric-weight'
 import { Operator } from './operator'
 import { Range } from './range'
 import { RuleSelector } from './rule-selector'
-import { Task } from './task'
 import { Value } from './value'
 
 interface RuleUnitFormProps {
-  showTask?: boolean
-  showIndicator?: boolean
+  showConnector?: boolean
   indicatorColor?: string
   onDelete?: () => void
 }
 
-export const RuleUnitForm = ({
-  showTask = true,
-  showIndicator = false,
-  indicatorColor = '#3B82F6',
-  onDelete
-}: RuleUnitFormProps) => {
+export const RuleUnitForm = ({ onDelete, showConnector }: RuleUnitFormProps) => {
   const [selectedMetric, setSelectedMetric] = useState<TypeMetric>('spend')
   const [selectedRange, setSelectedRange] = useState<TypeRange>('today')
   const [selectedComparisonMetric, setSelectedComparisonMetric] = useState<TypeMetric>('spend')
@@ -29,22 +22,22 @@ export const RuleUnitForm = ({
   const [ruleType, setRuleType] = useState<'valueBased' | 'metricBased'>('valueBased')
 
   return (
-    <Group gap={0} wrap="nowrap" align="stretch">
-      {showIndicator && (
+    <Group pos="relative" gap={0} wrap="nowrap" align="stretch">
+      {showConnector ? (
         <Box
+          component="span"
+          pos="absolute"
           style={{
-            width: '3px',
-            backgroundColor: indicatorColor,
-            borderRadius: '2px',
-            marginRight: '12px',
-            alignSelf: 'stretch',
+            width: '2em',
+            height: '2px',
+            left: '-32px',
+            top: '50%',
+            background: '#A5B3BF',
           }}
         />
-      )}
+      ) : null}
 
       <Stack gap="lg" style={{ flex: 1 }}>
-        {showTask && <Task />}
-
         <Group gap={0} wrap="nowrap">
           <>
             <Metric selectedMetric={selectedMetric} onMetricChange={setSelectedMetric} />
