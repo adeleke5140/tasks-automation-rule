@@ -59,25 +59,23 @@ export const Metric = ({ selectedMetric, onMetricChange, isComparison }: MetricP
     >
       <Combobox.Target>
         <Paper
+          style={{
+            borderRight: '1px solid #C6C6C6',
+          }}
           p="md"
           bg="white"
           shadow="sm"
           radius="0"
-          w={'350px'}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            borderRight: '1px solid #C6C6C6',
-            cursor: 'pointer',
-          }}
+          flex={1}
           onClick={() => metricCombobox.toggleDropdown()}
         >
-          {!isComparison ? <IconGripVertical size={20} style={{ color: 'var(--mantine-color-gray-5)' }} /> : null}
+          <Group align="center" gap={8}>
+            {!isComparison ? <IconGripVertical size={20} style={{ color: 'var(--mantine-color-gray-5)' }} /> : null}
 
-          <Group justify="space-between" wrap="nowrap" gap="xs" style={{ flex: 1 }}>
-            <Text size="sm">{metricLabels[selectedMetric]}</Text>
-            <IconChevronDown size={16} color="var(--mantine-color-gray-5)" />
+            <Group justify="space-between" wrap="nowrap" gap="xs" style={{ flex: 1 }}>
+              <Text size="sm">{metricLabels[selectedMetric]}</Text>
+              <IconChevronDown size={16} color="var(--mantine-color-gray-5)" />
+            </Group>
           </Group>
         </Paper>
       </Combobox.Target>
