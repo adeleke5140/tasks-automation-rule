@@ -1,6 +1,6 @@
 import { Box, Button, Stack } from '@mantine/core'
 import { Header } from './components/header'
-import { Task } from './components/task'
+import { TaskItem } from './components/task-item'
 
 function App() {
   return (
@@ -8,7 +8,7 @@ function App() {
       <Stack gap="xl">
         <Header />
 
-        <Task />
+        <TaskItem />
         <Box>
           <Button variant="subtle" color="gray" leftSection={<span>+</span>}>
             Task
