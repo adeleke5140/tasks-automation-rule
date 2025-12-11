@@ -15,7 +15,7 @@ interface RuleUnitFormProps {
 }
 
 export const RuleUnitForm = ({ onDelete, showConnector }: RuleUnitFormProps) => {
-  const [selectedMetric, setSelectedMetric] = useState<TypeMetric>('spend')
+  const [selectedMetric, setSelectedMetric] = useState<TypeMetric>('cost')
   const [selectedRange, setSelectedRange] = useState<TypeRange>('today')
   const [selectedComparisonMetric, setSelectedComparisonMetric] = useState<TypeMetric>('spend')
   const [selectedComparisonRange, setSelectedComparisonRange] = useState<TypeRange>('yesterday')
