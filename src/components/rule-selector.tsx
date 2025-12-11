@@ -4,9 +4,10 @@ import { IconCheck, IconSettings, IconTrash } from '@tabler/icons-react'
 interface RuleSelectorProps {
   ruleType: 'valueBased' | 'metricBased'
   setRuleType: (ruleType: 'valueBased' | 'metricBased') => void
+  onDelete?: () => void
 }
 
-export const RuleSelector = ({ ruleType, setRuleType }: RuleSelectorProps) => {
+export const RuleSelector = ({ ruleType, setRuleType, onDelete }: RuleSelectorProps) => {
   return (
     <Group>
       <Menu position="bottom-end" shadow="md">
@@ -40,9 +41,11 @@ export const RuleSelector = ({ ruleType, setRuleType }: RuleSelectorProps) => {
           </Menu.Item>
         </Menu.Dropdown>
       </Menu>
-      <ActionIcon variant="subtle" color="gray" size="sm">
-        <IconTrash size={18} />
-      </ActionIcon>
+      {onDelete && (
+        <ActionIcon variant="subtle" color="gray" size="sm" onClick={onDelete}>
+          <IconTrash size={18} />
+        </ActionIcon>
+      )}
     </Group>
   )
 }
