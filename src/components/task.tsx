@@ -1,7 +1,8 @@
-import { Box, Combobox, Group, Paper, Text, useCombobox } from '@mantine/core'
+import { Box, Combobox, Group, InputBase, Text, useCombobox } from '@mantine/core'
 import { IconChevronDown } from '@tabler/icons-react'
-import type { TypeTask as TypeTaskType } from '../types/client'
 import { useState } from 'react'
+import type { TypeTask as TypeTaskType } from '../types/client'
+import styles from './task.module.css'
 
 type Action = TypeTaskType['action']
 
@@ -45,10 +46,20 @@ export const Task = () => {
       }}
     >
       <Combobox.Target>
-        <Paper
-          p="md"
-          withBorder
-          radius="md"
+        <InputBase
+          component="button"
+          type="button"
+          pointer
+          styles={{
+            wrapper: {
+              width: '350px',
+              cursor: 'pointer',
+              height: '60px',
+            },
+            input: {
+              height: '60px',
+            },
+          }}
           style={{ width: 350, cursor: 'pointer' }}
           onClick={() => combobox.toggleDropdown()}
         >
@@ -63,7 +74,7 @@ export const Task = () => {
             </Box>
             <IconChevronDown size={20} color="var(--mantine-color-gray-7)" />
           </Group>
-        </Paper>
+        </InputBase>
       </Combobox.Target>
 
       <Combobox.Dropdown>
