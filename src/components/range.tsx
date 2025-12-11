@@ -15,16 +15,24 @@ interface RangeProps {
   selectedRange: TypeRange
   onRangeChange: (value: TypeRange) => void
   children?: React.ReactNode
+  isComparison?: boolean
 }
 
-export const Range = ({ selectedRange, onRangeChange, children }: RangeProps) => {
+export const Range = ({ selectedRange, onRangeChange, children, isComparison }: RangeProps) => {
   const rangeCombobox = useCombobox()
 
   const rangeOptions: TypeRange[] = ['yesterday', 'today', 'last_3_days', 'last_7_days', 'last_15_days', 'last_30_days']
 
   return (
-    <Paper>
-      <Group align="center" justify="space-between" gap={8}>
+    <Paper
+      p="md"
+      bg="white"
+      shadow="sm"
+      radius="0"
+      flex={1}
+      style={{ borderRight: isComparison ? '' : '1px solid #c6c6c6' }}
+    >
+      <Group align="center" justify="space-between" gap={0}>
         <Combobox
           store={rangeCombobox}
           onOptionSubmit={(value) => {
@@ -33,21 +41,12 @@ export const Range = ({ selectedRange, onRangeChange, children }: RangeProps) =>
           }}
         >
           <Combobox.Target>
-            <Paper
-              p="md"
-              bg="white"
-              shadow="sm"
-              radius="0"
-              style={{ flex: 1, cursor: 'pointer', borderRight: '1px solid #C6C6C6' }}
-              onClick={() => rangeCombobox.toggleDropdown()}
-            >
-              <Group justify="space-between" wrap="nowrap" gap="xs">
-                <Text size="sm" c="gray.7">
-                  {rangeLabels[selectedRange]}
-                </Text>
-                <IconChevronDown size={16} color="var(--mantine-color-gray-5)" />
-              </Group>
-            </Paper>
+            <Group justify="space-between" wrap="nowrap" gap="xs">
+              <Text size="sm" c="gray.7">
+                {rangeLabels[selectedRange]}
+              </Text>
+              <IconChevronDown size={16} color="var(--mantine-color-gray-5)" />
+            </Group>
           </Combobox.Target>
 
           <Combobox.Dropdown>
@@ -62,7 +61,9 @@ export const Range = ({ selectedRange, onRangeChange, children }: RangeProps) =>
             </Combobox.Options>
           </Combobox.Dropdown>
         </Combobox>
-        {children}
+        <Group wrap="nowrap" gap="xs">
+          {children}
+        </Group>
       </Group>
     </Paper>
   )
