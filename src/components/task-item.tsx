@@ -3,6 +3,7 @@ import { RuleUnitForm } from './rule-unit-form'
 import { Task } from './task'
 import { useState } from 'react'
 import { notifications } from '@mantine/notifications'
+import { IconPlus } from '@tabler/icons-react'
 
 type ConnectorType = 'AND' | 'OR'
 
@@ -92,11 +93,18 @@ export const TaskItem = () => {
         </Stack>
 
         <Group justify="space-between" align="center">
-          <Group gap="md">
-            <Button variant="subtle" color="gray" leftSection={<span>+</span>} onClick={addCondition}>
+          <Group gap="xs">
+            <Button
+              variant="subtle"
+              fw={400}
+              size="md"
+              color="black"
+              leftSection={<IconPlus size={16} />}
+              onClick={addCondition}
+            >
               Condition
             </Button>
-            <Button variant="subtle" color="gray" leftSection={<span>+</span>}>
+            <Button variant="subtle" fw="400" size="md" color="black" leftSection={<IconPlus size={16} />}>
               Group
             </Button>
           </Group>
