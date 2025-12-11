@@ -14,7 +14,7 @@ export const Value = ({ selectedMetric, children }: ValueProps) => {
   const showCurrencySign = metricsWithCurrency.includes(selectedMetric)
 
   return (
-    <Paper p="md" bg="white" shadow="sm" radius="0">
+    <Paper p="md" bg="white" shadow="sm" radius="0" flex={1}>
       <Group align="cneter" justify="space-between" gap={8}>
         <input
           type="text"
@@ -27,9 +27,6 @@ export const Value = ({ selectedMetric, children }: ValueProps) => {
             background: 'transparent',
             color: 'var(--mantine-color-gray-7)',
             fontSize: 'var(--mantine-font-size-sm)',
-            padding: 0,
-            flex: 1,
-            minWidth: 0,
           }}
         />
         <Group gap="xs" wrap="nowrap">
