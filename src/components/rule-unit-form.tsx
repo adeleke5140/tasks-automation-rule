@@ -1,13 +1,19 @@
 import { Button, Group, Stack, Tabs } from '@mantine/core'
+import { useState } from 'react'
+import type { TypeMetric } from '../types/client'
 import { Metric } from './metric'
 import { Operator } from './operator'
 import { Range } from './range'
+import { RuleSelector } from './rule-selector'
 import { Task } from './task'
 import { Value } from './value'
-import { useState } from 'react'
-import type { TypeMetric } from '../types/client'
 
-export const RuleUnitForm = () => {
+interface RuleUnitFormProps {
+  ruleType: 'valueBased' | 'metricBased'
+  setRuleType: (ruleType: 'valueBased' | 'metricBased') => void
+}
+
+export const RuleUnitForm = ({ ruleType, setRuleType }: RuleUnitFormProps) => {
   const [selectedMetric, setSelectedMetric] = useState<TypeMetric>('spend')
 
   return (
@@ -21,7 +27,9 @@ export const RuleUnitForm = () => {
 
         <Operator />
 
-        <Value selectedMetric={selectedMetric} />
+        <Value selectedMetric={selectedMetric}>
+          <RuleSelector ruleType={ruleType} setRuleType={setRuleType} />
+        </Value>
       </Group>
 
       <Group justify="space-between" align="center">
