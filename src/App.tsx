@@ -1,6 +1,6 @@
 import { Box, Button, Group, Paper, Stack, Tabs } from '@mantine/core'
+import { notifications } from '@mantine/notifications'
 import { useState } from 'react'
-import { Connector } from './components/connector'
 import { Header } from './components/header'
 import { RuleUnitForm } from './components/rule-unit-form'
 
@@ -18,12 +18,16 @@ function App() {
     setConditions((prev) => [...prev, { id: (prev.length + 1).toString(), connectorType: 'AND' }])
   }
 
-  const toggleConnector = (index: number) => {
-    const updatedConditions = [...conditions]
-    if (updatedConditions[index].connectorType) {
-      updatedConditions[index].connectorType = updatedConditions[index].connectorType === 'AND' ? 'OR' : 'AND'
-      setConditions(updatedConditions)
+  const deleteCondition = (id: string) => {
+    if (conditions.length === 1) {
+      notifications.show({
+        title: 'Cannot delete',
+        message: 'At least one condition must be present',
+        color: 'red',
+      })
+      return
     }
+    setConditions(conditions.filter((condition) => condition.id !== id))
   }
 
   return (
@@ -31,18 +35,21 @@ function App() {
       <Stack gap="xl">
         <Header />
 
-        <Paper p="lg" bg="m-pink.0" radius="md">
+        <Paper p="xl" bg="m-pink.0" radius="md">
           <Stack gap="lg">
-            {conditions.map((condition, index) => (
-              <Stack key={condition.id} gap="lg">
-                {index > 0 && (
-                  <Group gap={0} style={{ paddingLeft: '20px' }}>
-                    <Connector type={condition.connectorType || 'AND'} onToggle={() => toggleConnector(index)} />
-                  </Group>
-                )}
-                <RuleUnitForm showTask={index === 0} showIndicator={index > 0} indicatorColor="#3B82F6" />
+            <Group gap={0} wrap="nowrap" align="flex-start">
+              <Stack gap="md" style={{ flex: 1 }}>
+                {conditions.map((condition, index) => (
+                  <RuleUnitForm
+                    key={condition.id}
+                    showTask={index === 0}
+                    showIndicator={false}
+                    indicatorColor="#3B82F6"
+                    onDelete={() => deleteCondition(condition.id)}
+                  />
+                ))}
               </Stack>
-            ))}
+            </Group>
 
             <Group justify="space-between" align="center">
               <Group gap="md">
