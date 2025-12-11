@@ -1,4 +1,4 @@
-import { Button, Group, Stack, Tabs } from '@mantine/core'
+import { Box, Group, Stack } from '@mantine/core'
 import { useState } from 'react'
 import type { TypeMetric, TypeRange } from '../types/client'
 import { Metric } from './metric'
@@ -9,7 +9,17 @@ import { RuleSelector } from './rule-selector'
 import { Task } from './task'
 import { Value } from './value'
 
-export const RuleUnitForm = () => {
+interface RuleUnitFormProps {
+  showTask?: boolean
+  showIndicator?: boolean
+  indicatorColor?: string
+}
+
+export const RuleUnitForm = ({
+  showTask = true,
+  showIndicator = false,
+  indicatorColor = '#3B82F6'
+}: RuleUnitFormProps) => {
   const [selectedMetric, setSelectedMetric] = useState<TypeMetric>('spend')
   const [selectedRange, setSelectedRange] = useState<TypeRange>('today')
   const [selectedComparisonMetric, setSelectedComparisonMetric] = useState<TypeMetric>('spend')
@@ -17,64 +27,49 @@ export const RuleUnitForm = () => {
   const [ruleType, setRuleType] = useState<'valueBased' | 'metricBased'>('valueBased')
 
   return (
-    <Stack gap="lg">
-      <Task />
-
-      <Group gap={0} wrap="nowrap">
-        <>
-          <Metric selectedMetric={selectedMetric} onMetricChange={setSelectedMetric} />
-          <Range selectedRange={selectedRange} onRangeChange={setSelectedRange} />
-          <Operator />
-        </>
-
-        {ruleType === 'metricBased' ? (
-          <>
-            <MetricWeight />
-            <Metric
-              selectedMetric={selectedComparisonMetric}
-              onMetricChange={setSelectedComparisonMetric}
-              isComparison
-            />
-            <Range selectedRange={selectedComparisonRange} onRangeChange={setSelectedComparisonRange} isComparison>
-              <RuleSelector ruleType={ruleType} setRuleType={setRuleType} />
-            </Range>
-          </>
-        ) : (
-          <Value selectedMetric={selectedMetric}>
-            <RuleSelector ruleType={ruleType} setRuleType={setRuleType} />
-          </Value>
-        )}
-      </Group>
-
-      <Group justify="space-between" align="center">
-        <Group gap="md">
-          <Button variant="subtle" color="gray" leftSection={<span>+</span>}>
-            Condition
-          </Button>
-          <Button variant="subtle" color="gray" leftSection={<span>+</span>}>
-            Group
-          </Button>
-        </Group>
-
-        <Tabs
-          defaultValue="preview"
-          variant="default"
-          styles={{
-            tab: {
-              '&[data-active]': {
-                backgroundColor: 'transparent',
-                color: 'var(--mantine-color-gray-9)',
-                borderBottom: '2px solid var(--mantine-color-gray-9)',
-              },
-            },
+    <Group gap={0} wrap="nowrap" align="flex-start">
+      {showIndicator && (
+        <Box
+          style={{
+            width: '4px',
+            height: '100%',
+            backgroundColor: indicatorColor,
+            borderRadius: '2px',
+            marginRight: '16px',
+            minHeight: '60px',
           }}
-        >
-          <Tabs.List>
-            <Tabs.Tab value="preview">Preview</Tabs.Tab>
-            <Tabs.Tab value="description">Description</Tabs.Tab>
-          </Tabs.List>
-        </Tabs>
-      </Group>
-    </Stack>
+        />
+      )}
+
+      <Stack gap="lg" style={{ flex: 1 }}>
+        {showTask && <Task />}
+
+        <Group gap={0} wrap="nowrap">
+          <>
+            <Metric selectedMetric={selectedMetric} onMetricChange={setSelectedMetric} />
+            <Range selectedRange={selectedRange} onRangeChange={setSelectedRange} />
+            <Operator />
+          </>
+
+          {ruleType === 'metricBased' ? (
+            <>
+              <MetricWeight />
+              <Metric
+                selectedMetric={selectedComparisonMetric}
+                onMetricChange={setSelectedComparisonMetric}
+                isComparison
+              />
+              <Range selectedRange={selectedComparisonRange} onRangeChange={setSelectedComparisonRange} isComparison>
+                <RuleSelector ruleType={ruleType} setRuleType={setRuleType} />
+              </Range>
+            </>
+          ) : (
+            <Value selectedMetric={selectedMetric}>
+              <RuleSelector ruleType={ruleType} setRuleType={setRuleType} />
+            </Value>
+          )}
+        </Group>
+      </Stack>
+    </Group>
   )
 }
