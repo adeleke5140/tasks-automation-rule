@@ -35,7 +35,7 @@ export const RuleUnitForm = () => {
               onMetricChange={setSelectedComparisonMetric}
               isComparison
             />
-            <Range selectedRange={selectedComparisonRange} onRangeChange={setSelectedComparisonRange}>
+            <Range selectedRange={selectedComparisonRange} onRangeChange={setSelectedComparisonRange} isComparison>
               <RuleSelector ruleType={ruleType} setRuleType={setRuleType} />
             </Range>
           </>
