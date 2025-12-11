@@ -13,12 +13,14 @@ interface RuleUnitFormProps {
   showTask?: boolean
   showIndicator?: boolean
   indicatorColor?: string
+  onDelete?: () => void
 }
 
 export const RuleUnitForm = ({
   showTask = true,
   showIndicator = false,
-  indicatorColor = '#3B82F6'
+  indicatorColor = '#3B82F6',
+  onDelete
 }: RuleUnitFormProps) => {
   const [selectedMetric, setSelectedMetric] = useState<TypeMetric>('spend')
   const [selectedRange, setSelectedRange] = useState<TypeRange>('today')
@@ -27,16 +29,15 @@ export const RuleUnitForm = ({
   const [ruleType, setRuleType] = useState<'valueBased' | 'metricBased'>('valueBased')
 
   return (
-    <Group gap={0} wrap="nowrap" align="flex-start">
+    <Group gap={0} wrap="nowrap" align="stretch">
       {showIndicator && (
         <Box
           style={{
-            width: '4px',
-            height: '100%',
+            width: '3px',
             backgroundColor: indicatorColor,
             borderRadius: '2px',
-            marginRight: '16px',
-            minHeight: '60px',
+            marginRight: '12px',
+            alignSelf: 'stretch',
           }}
         />
       )}
@@ -60,12 +61,12 @@ export const RuleUnitForm = ({
                 isComparison
               />
               <Range selectedRange={selectedComparisonRange} onRangeChange={setSelectedComparisonRange} isComparison>
-                <RuleSelector ruleType={ruleType} setRuleType={setRuleType} />
+                <RuleSelector ruleType={ruleType} setRuleType={setRuleType} onDelete={onDelete} />
               </Range>
             </>
           ) : (
             <Value selectedMetric={selectedMetric}>
-              <RuleSelector ruleType={ruleType} setRuleType={setRuleType} />
+              <RuleSelector ruleType={ruleType} setRuleType={setRuleType} onDelete={onDelete} />
             </Value>
           )}
         </Group>
