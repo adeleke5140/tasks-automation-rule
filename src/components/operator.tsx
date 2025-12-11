@@ -41,10 +41,11 @@ export const Operator = () => {
           radius="0"
           bg="white"
           shadow="sm"
-          style={{ minWidth: 60, textAlign: 'center', cursor: 'pointer', borderRight: '1px solid #C6C6C6' }}
+          w={100}
+          style={{ textAlign: 'center', cursor: 'pointer', borderRight: '1px solid #C6C6C6' }}
           onClick={() => operatorCombobox.toggleDropdown()}
         >
-          <Group justify="center" wrap="nowrap" gap="xs">
+          <Group px={0} justify="space-between" wrap="nowrap" gap="xs">
             <Text size="sm" c="gray.7">
               {operatorLabels[selectedOperator]}
             </Text>
