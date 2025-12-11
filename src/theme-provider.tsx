@@ -1,4 +1,5 @@
 import { MantineProvider, createTheme } from '@mantine/core'
+import { Notifications } from '@mantine/notifications'
 import type { ReactNode } from 'react'
 
 const theme = createTheme({
@@ -38,6 +39,7 @@ interface ThemeProviderProps {
 export function ThemeProvider({ children }: ThemeProviderProps) {
   return (
     <MantineProvider theme={theme} defaultColorScheme="light">
+      <Notifications />
       {children}
     </MantineProvider>
   )
