@@ -1,8 +1,9 @@
-import { Box, Button, Group, Paper, Stack, Tabs } from '@mantine/core'
+import { Box, Button, Group, Paper, SimpleGrid, Stack, Tabs, Text } from '@mantine/core'
 import { notifications } from '@mantine/notifications'
 import { useState } from 'react'
 import { Header } from './components/header'
 import { RuleUnitForm } from './components/rule-unit-form'
+import { Task } from './components/task'
 
 type ConnectorType = 'AND' | 'OR'
 
@@ -30,6 +31,8 @@ function App() {
     setConditions(conditions.filter((condition) => condition.id !== id))
   }
 
+  const showConector = conditions.length > 1
+
   return (
     <Box p="xl" style={{ maxWidth: 1144, margin: '0 auto' }}>
       <Stack gap="xl">
@@ -37,19 +40,52 @@ function App() {
 
         <Paper p="xl" bg="m-pink.0" radius="md">
           <Stack gap="lg">
-            <Group gap={0} wrap="nowrap" align="flex-start">
-              <Stack gap="md" style={{ flex: 1 }}>
-                {conditions.map((condition, index) => (
-                  <RuleUnitForm
-                    key={condition.id}
-                    showTask={index === 0}
-                    showIndicator={false}
-                    indicatorColor="#3B82F6"
-                    onDelete={() => deleteCondition(condition.id)}
-                  />
-                ))}
-              </Stack>
-            </Group>
+            <Stack>
+              <Task />
+              <SimpleGrid
+                styles={{
+                  root: {
+                    gridTemplateColumns: showConector ? '40px 1fr' : '',
+                    gap: 0,
+                  },
+                }}
+              >
+                {showConector ? (
+                  <Box
+                    component="div"
+                    mr={0}
+                    p="sm"
+                    style={{ borderRadius: '4px', zIndex: 2 }}
+                    bg="m-blue.6"
+                    w={'fit-content'}
+                  >
+                    <Group gap={0} dir="row" align="center" justify="center" h={'100%'}>
+                      <Text
+                        style={{
+                          writingMode: 'vertical-lr',
+                          transform: 'rotate(180deg)',
+                        }}
+                        c="white"
+                        fw={500}
+                      >
+                        + AND
+                      </Text>
+                    </Group>
+                  </Box>
+                ) : null}
+
+                <Stack gap="md" style={{ flex: 1, marginLeft: conditions.length > 1 ? '25px' : '' }}>
+                  {conditions.map((condition) => (
+                    <RuleUnitForm
+                      key={condition.id}
+                      showConnector={conditions.length > 1}
+                      indicatorColor="#3B82F6"
+                      onDelete={() => deleteCondition(condition.id)}
+                    />
+                  ))}
+                </Stack>
+              </SimpleGrid>
+            </Stack>
 
             <Group justify="space-between" align="center">
               <Group gap="md">
