@@ -2,7 +2,6 @@ import { Box, Combobox, Group, InputBase, Text, useCombobox } from '@mantine/cor
 import { IconChevronDown } from '@tabler/icons-react'
 import { useState } from 'react'
 import type { TypeTask as TypeTaskType } from '../types/client'
-import styles from './task.module.css'
 
 type Action = TypeTaskType['action']
 
