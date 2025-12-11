@@ -43,9 +43,10 @@ const metricLabels: Record<TypeMetric, string> = {
 interface MetricProps {
   selectedMetric: TypeMetric
   onMetricChange: (metric: TypeMetric) => void
+  isComparison?: boolean
 }
 
-export const Metric = ({ selectedMetric, onMetricChange }: MetricProps) => {
+export const Metric = ({ selectedMetric, onMetricChange, isComparison }: MetricProps) => {
   const metricCombobox = useCombobox()
 
   return (
@@ -72,7 +73,8 @@ export const Metric = ({ selectedMetric, onMetricChange }: MetricProps) => {
           }}
           onClick={() => metricCombobox.toggleDropdown()}
         >
-          <IconGripVertical size={20} style={{ color: 'var(--mantine-color-gray-5)' }} />
+          {!isComparison ? <IconGripVertical size={20} style={{ color: 'var(--mantine-color-gray-5)' }} /> : null}
+
           <Group justify="space-between" wrap="nowrap" gap="xs" style={{ flex: 1 }}>
             <Text size="sm">{metricLabels[selectedMetric]}</Text>
             <IconChevronDown size={16} color="var(--mantine-color-gray-5)" />
