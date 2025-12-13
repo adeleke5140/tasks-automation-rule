@@ -43,7 +43,7 @@ export const ConditionTree = ({ cond }: ConditionTreeProps) => {
         },
       }}
     >
-      <RelationConnector connectionType={cond.relation} setConnectionType={() => {}} />
+      <RelationConnector connectionType={cond.relation} />
       <Stack component={'div'} gap="md" style={{ flex: 1, marginLeft: '25px' }} data-relation="true">
         {cond.children.map((item, i) => {
           return <ConditionTree key={i} cond={item} />
