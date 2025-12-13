@@ -1,0 +1,14 @@
+.connector {
+  display: hidden;
+  width: 2em;
+  height: 2px;
+  top: 50%;
+  left: -32px;
+  background: #a5b3bf;
+  display: none;
+  position: absolute;
+}
+
+[data-relation='true'] .connector {
+  display: block;
+}
