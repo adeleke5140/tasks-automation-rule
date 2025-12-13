@@ -11,7 +11,7 @@ export const sampleGroup: Group = {
       type: 'condition',
       payload: {
         valueBased: {
-          metric: 'cost',
+          metric: 'spend',
           range: 'today',
           operator: 'gt',
           value: 100,
@@ -26,10 +26,10 @@ export const sampleGroup: Group = {
       ruleType: 'valueBased',
       payload: {
         valueBased: {
-          metric: 'cost',
-          range: 'today',
-          operator: 'gt',
-          value: 100,
+          metric: 'purchases',
+          range: 'yesterday',
+          operator: 'lt',
+          value: 50,
         },
       },
       relation: '',
