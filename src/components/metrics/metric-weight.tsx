@@ -1,9 +1,12 @@
 import { Paper } from '@mantine/core'
-import { useState } from 'react'
 
-export const MetricWeight = () => {
-  const [weight, setWeight] = useState('')
-
+export const MetricWeight = ({
+  weight,
+  onWeightChange,
+}: {
+  weight: number
+  onWeightChange: (item: number) => void
+}) => {
   return (
     <Paper
       p="md"
@@ -17,7 +20,7 @@ export const MetricWeight = () => {
       <input
         type="number"
         value={weight}
-        onChange={(e) => setWeight(e.target.value)}
+        onChange={(e) => onWeightChange(Number(e.target.value))}
         placeholder="0"
         style={{
           border: 'none',
