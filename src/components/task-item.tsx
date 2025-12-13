@@ -24,7 +24,6 @@ export const TaskItem = () => {
 
   const addCondition = (conditions: Array<Condition>) => {
     const existingGroup = conditions.find((item) => item.type === 'group')
-    console.log({ existingGroup })
     if (!existingGroup) {
       setConditions((prev) => [...prev, sampleItem])
       return
