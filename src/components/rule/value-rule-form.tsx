@@ -12,6 +12,7 @@ import { Range } from '../range'
 export const ValueRuleForm = ({ ruleType, payload }: RuleTypeFormProps<'valueBased'>) => {
   const [selectedMetric, setSelectedMetric] = useState<TypeMetric>(payload?.metric || 'cost')
   const [selectedRange, setSelectedRange] = useState<TypeRange>(payload?.range || 'today')
+  const [selectedOperator, setSelectedOperator] = useState(payload?.operator || 'lt')
   return (
     <Group pos="relative" gap={0} wrap="nowrap" align="stretch">
       <Connector />
@@ -20,7 +21,7 @@ export const ValueRuleForm = ({ ruleType, payload }: RuleTypeFormProps<'valueBas
         <Group gap={0} wrap="nowrap">
           <Metric selectedMetric={selectedMetric} onMetricChange={setSelectedMetric} />
           <Range selectedRange={selectedRange} onRangeChange={setSelectedRange} />
-          <Operator />
+          <Operator selectedOperator={selectedOperator} onOperatorChange={setSelectedOperator} />
           <Value selectedMetric={selectedMetric}>
             <RuleSelector ruleType={ruleType} setRuleType={() => {}} onDelete={() => {}} />
           </Value>
