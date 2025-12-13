@@ -25,19 +25,19 @@ export type TypeRuleUnit = {
 
   payload: {
     valueBased?: {
-      metric: string
+      metric: TypeMetric
       range: TypeRange
       operator: TypeOperator
       value: number
       result?: boolean
     }
     metricBased?: {
-      metric: string
+      metric: TypeMetric
       range: TypeRange
       operator: TypeOperator
       comparisonMetricWeight: number
-      comparisonMetric: string
-      comparisonMetricRange: string
+      comparisonMetric: TypeMetric
+      comparisonMetricRange: TypeRange
       result?: boolean
     }
   }
