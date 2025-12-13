@@ -1,12 +1,9 @@
 import { Box, Group, Text } from '@mantine/core'
 import type { TypeRuleUnit } from '../types/client'
+import { useState } from 'react'
 
-export const RelationConnector = ({
-  connectionType,
-}: {
-  connectionType: TypeRuleUnit['relation']
-  setConnectionType: (item: TypeRuleUnit['relation']) => void
-}) => {
+export const RelationConnector = ({ connectionType }: { connectionType: TypeRuleUnit['relation'] }) => {
+  const [relation, setRelation] = useState(connectionType)
   return (
     <Box
       component="button"
@@ -14,9 +11,16 @@ export const RelationConnector = ({
       mr={0}
       p="sm"
       style={{ borderRadius: '4px', zIndex: 2, border: 'transparent' }}
-      bg={connectionType === 'and' ? 'm-blue.6' : 'm-orange.3'}
+      bg={relation === 'and' ? 'm-blue.6' : 'm-orange.3'}
       w={'fit-content'}
-      onClick={() => {}}
+      onClick={() => {
+        if (!relation) return
+        if (relation === 'and') {
+          setRelation('or')
+        } else {
+          setRelation('and')
+        }
+      }}
     >
       <Group gap={0} dir="row" align="center" justify="center" h={'100%'}>
         <Text
@@ -27,7 +31,7 @@ export const RelationConnector = ({
           c="white"
           fw={500}
         >
-          + {connectionType?.toUpperCase()}
+          + {relation?.toUpperCase()}
         </Text>
       </Group>
     </Box>
