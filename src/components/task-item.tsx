@@ -1,10 +1,11 @@
 import { Button, Group, Paper, Stack, Tabs } from '@mantine/core'
 import { IconPlus } from '@tabler/icons-react'
 import { useState } from 'react'
+import { sampleItem } from '../data/data'
 import type { TypeRuleUnit } from '../types/client'
 import { Action } from './action'
 import { ConditionTree } from './condition-tree'
-import { sampleGroup } from '../data/data'
+import { notifications } from '@mantine/notifications'
 
 export type Relation = TypeRuleUnit['relation']
 
@@ -19,23 +20,34 @@ export type Group = { id: string; type: 'group'; relation: Relation; children: A
 export type Condition = Group | RuleItem
 
 export const TaskItem = () => {
-  const [conditions, setConditions] = useState<Array<Condition>>([sampleGroup])
+  const [conditions, setConditions] = useState<Array<Condition>>([sampleItem])
 
-  const addCondition = () => {
-    setConditions((prev) => [
-      ...prev,
-      {
-        id: (prev.length + 1).toString(),
-        type: 'condition',
-        ruleType: 'valueBased',
-        relation: '',
-        children: [],
-        payload: {},
-      },
-    ])
+  const addCondition = (conditions: Array<Condition>) => {
+    const existingGroup = conditions.find((item) => item.type === 'group')
+    console.log({ existingGroup })
+    if (!existingGroup) {
+      setConditions((prev) => [...prev, sampleItem])
+      return
+    }
+    const updatedGroup = { ...existingGroup, children: [...existingGroup.children, sampleItem] }
+    setConditions([updatedGroup])
   }
 
-  const createGroup = () => {}
+  const createGroup = (conditions: Array<Condition>) => {
+    if (conditions.length <= 1) {
+      return notifications.show({
+        title: 'Group requires multiple conditions',
+        message: 'Add a new condition to create a new group',
+      })
+    }
+    const newGroup: Group = {
+      id: (conditions.length + 1).toString(),
+      type: 'group',
+      relation: 'or',
+      children: conditions,
+    }
+    setConditions([newGroup])
+  }
 
   return (
     <Paper p="xl" bg="m-pink.0" radius="md">
@@ -55,12 +67,12 @@ export const TaskItem = () => {
               size="md"
               color="black"
               leftSection={<IconPlus size={16} />}
-              onClick={addCondition}
+              onClick={() => addCondition(conditions)}
             >
               Condition
             </Button>
             <Button
-              onClick={createGroup}
+              onClick={() => createGroup(conditions)}
               variant="subtle"
               fw="400"
               size="md"
