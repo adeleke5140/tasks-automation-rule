@@ -1,6 +1,5 @@
 import { Combobox, Group, Paper, Text, useCombobox } from '@mantine/core'
 import { IconChevronDown } from '@tabler/icons-react'
-import { useState } from 'react'
 import type { TypeOperator } from '../types/client'
 
 const operatorLabels: Record<TypeOperator, string> = {
@@ -21,9 +20,14 @@ const operatorDropdownLabels: Record<TypeOperator, string> = {
   ne: '≠ does not equal',
 }
 
-export const Operator = () => {
+export const Operator = ({
+  selectedOperator,
+  onOperatorChange,
+}: {
+  selectedOperator: TypeOperator
+  onOperatorChange: (item: TypeOperator) => void
+}) => {
   const operatorCombobox = useCombobox()
-  const [selectedOperator, setSelectedOperator] = useState<TypeOperator>('gt')
 
   const operatorOptions: TypeOperator[] = ['lt', 'lte', 'gt', 'gte', 'eq', 'ne']
 
@@ -31,7 +35,7 @@ export const Operator = () => {
     <Combobox
       store={operatorCombobox}
       onOptionSubmit={(value) => {
-        setSelectedOperator(value as TypeOperator)
+        onOperatorChange(value as TypeOperator)
         operatorCombobox.closeDropdown()
       }}
     >
