@@ -1,6 +1,6 @@
 import { SimpleGrid, Stack } from '@mantine/core'
 import { RelationConnector } from './relation-connector'
-import { RuleUnitForm } from './rule-unit-form'
+import { RuleUnitForm } from './rule/rule-unit-form'
 import type { Condition } from './task-item'
 
 type ConditionTreeProps = {
@@ -26,7 +26,6 @@ export const ConditionTree = ({ cond }: ConditionTreeProps) => {
     return (
       <RuleUnitForm
         id={cond.id}
-        showConnector={true}
         indicatorColor=""
         onDelete={(id) => deleteCondition(id)}
         ruleType={cond.ruleType}
@@ -45,7 +44,7 @@ export const ConditionTree = ({ cond }: ConditionTreeProps) => {
       }}
     >
       <RelationConnector connectionType={cond.relation} setConnectionType={() => {}} />
-      <Stack gap="md" style={{ flex: 1, marginLeft: '25px' }}>
+      <Stack component={'div'} gap="md" style={{ flex: 1, marginLeft: '25px' }} data-relation="true">
         {cond.children.map((item, i) => {
           return <ConditionTree key={i} cond={item} />
         })}
