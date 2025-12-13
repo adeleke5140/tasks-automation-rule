@@ -14,7 +14,14 @@ export const Value = ({ selectedMetric, children }: ValueProps) => {
   const showCurrencySign = metricsWithCurrency.includes(selectedMetric)
 
   return (
-    <Paper p="md" bg="white" shadow="sm" radius="0" flex={1}>
+    <Paper
+      p="md"
+      bg="white"
+      shadow="sm"
+      radius="0"
+      flex={1}
+      style={{ borderTopRightRadius: '4px', borderBottomRightRadius: '4px' }}
+    >
       <Group align="cneter" justify="space-between" gap={8}>
         <input
           type="text"

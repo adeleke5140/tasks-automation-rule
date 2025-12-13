@@ -61,6 +61,8 @@ export const Metric = ({ selectedMetric, onMetricChange, isComparison }: MetricP
         <Paper
           style={{
             borderRight: '1px solid #C6C6C6',
+            borderTopLeftRadius: '4px',
+            borderBottomLeftRadius: '4px',
           }}
           p="md"
           bg="white"
