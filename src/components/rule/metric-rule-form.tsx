@@ -1,13 +1,13 @@
-import { useState } from 'react'
-import type { RuleTypeFormProps } from './rule-unit-form'
-import type { TypeMetric, TypeRange } from '../../types/client'
 import { Group, Stack } from '@mantine/core'
+import { useState } from 'react'
+import { type TypeMetric, type TypeOperator, type TypeRange } from '../../types/client'
 import { Connector } from '../connector/connector'
 import { Metric } from '../metric'
-import { Operator } from '../operator'
 import { MetricWeight } from '../metrics/metric-weight'
+import { Operator } from '../operator'
 import { Range } from '../range'
 import { RuleSelector } from '../rule-selector'
+import type { RuleTypeFormProps } from './rule-unit-form'
 
 export const MetricRuleForm = ({ ruleType, payload }: RuleTypeFormProps<'metricBased'>) => {
   const [selectedMetric, setSelectedMetric] = useState<TypeMetric>(payload?.metric || 'cost')
@@ -19,6 +19,8 @@ export const MetricRuleForm = ({ ruleType, payload }: RuleTypeFormProps<'metricB
     payload?.comparisonMetricRange || 'last_30_days'
   )
   const [selectedComparisonWeight, setSelectedComparisionWeight] = useState(payload?.comparisonMetricWeight || 0)
+  const [selectedOperator, setSelectedOperator] = useState<TypeOperator>(payload?.operator || 'eq')
+
   return (
     <Group pos="relative" gap={0} wrap="nowrap" align="stretch">
       <Connector />
@@ -26,7 +28,7 @@ export const MetricRuleForm = ({ ruleType, payload }: RuleTypeFormProps<'metricB
         <Group gap={0} wrap="nowrap">
           <Metric selectedMetric={selectedMetric} onMetricChange={setSelectedMetric} />
           <Range selectedRange={selectedRange} onRangeChange={setSelectedRange} />
-          <Operator />
+          <Operator selectedOperator={selectedOperator} onOperatorChange={setSelectedOperator} />
           <MetricWeight weight={selectedComparisonWeight} onWeightChange={setSelectedComparisionWeight} />
           <Metric selectedMetric={selectedComparisonMetric} onMetricChange={setSelectedComparisonMetric} isComparison />
           <Range selectedRange={selectedComparisonRange} onRangeChange={setSelectedComparisonRange} isComparison>
