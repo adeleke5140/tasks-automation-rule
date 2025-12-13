@@ -5,22 +5,15 @@ import type { Condition } from './task-item'
 
 type ConditionTreeProps = {
   cond: Condition
+  selectionIds: Set<string>
+  onToggleSelection: (item: string) => void
+  isSelectable: boolean
 }
 
-export const ConditionTree = ({ cond }: ConditionTreeProps) => {
+export const ConditionTree = ({ cond, selectionIds, onToggleSelection, isSelectable }: ConditionTreeProps) => {
   if (cond.type === 'condition') {
-    //potential tightly coupling state and ui change
     const deleteCondition = (id: string) => {
       console.log('deleted', id)
-      //   if (conditions.length === 1) {
-      //     notifications.show({
-      //       title: 'Cannot delete',
-      //       message: 'At least one condition must be present',
-      //       color: 'red',
-      //     })
-      //     return
-      //   }
-      //   setConditions(conditions.filter((condition) => condition.id !== id))
     }
 
     return (
@@ -46,7 +39,15 @@ export const ConditionTree = ({ cond }: ConditionTreeProps) => {
       <RelationConnector connectionType={cond.relation} />
       <Stack component={'div'} gap="md" style={{ flex: 1, marginLeft: '25px' }} data-relation="true">
         {cond.children.map((item, i) => {
-          return <ConditionTree key={i} cond={item} />
+          return (
+            <ConditionTree
+              key={i}
+              cond={item}
+              selectionIds={selectionIds}
+              onToggleSelection={onToggleSelection}
+              isSelectable={isSelectable}
+            />
+          )
         })}
       </Stack>
     </SimpleGrid>
