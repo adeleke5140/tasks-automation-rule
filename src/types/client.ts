@@ -20,7 +20,7 @@ export type TypeMetric =
   | 'leads_value'
   | 'active_ads_in_adset'
 
-type TypeRuleUnit = {
+export type TypeRuleUnit = {
   ruleType: 'valueBased' | 'metricBased'
 
   payload: {
@@ -42,7 +42,7 @@ type TypeRuleUnit = {
     }
   }
 
-  relation?: 'and' | 'or'
+  relation?: 'and' | 'or' | ''
   children?: Array<TypeRuleUnit>
 }
 
