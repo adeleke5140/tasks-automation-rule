@@ -19,7 +19,7 @@ const actionLabels: Record<Action, string> = {
   notify: 'Notify',
 }
 
-export const Task = () => {
+export const Action = () => {
   const combobox = useCombobox()
   const [selectedAction, setSelectedAction] = useState<Action>('pause')
 
