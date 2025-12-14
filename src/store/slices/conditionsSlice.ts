@@ -1,13 +1,25 @@
-import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import type { Condition, Group } from '../../components/task-item'
-import { sampleGroup, sampleItem } from '../../data/data'
+import { createSlice, type PayloadAction, current } from '@reduxjs/toolkit'
+import type { Condition, Group } from '@/components/task/task-item'
+import { sampleItem } from '@/data/data'
+import type { TypeRuleUnit } from '@/types/client'
+
+type ConditionPayloadUpdate =
+  | Partial<NonNullable<TypeRuleUnit['payload']['valueBased']>>
+  | Partial<NonNullable<TypeRuleUnit['payload']['metricBased']>>
 
 interface ConditionsState {
   conditions: Array<Condition>
 }
 
 const initialState: ConditionsState = {
-  conditions: [sampleGroup],
+  conditions: [
+    {
+      id: 'root-group',
+      type: 'group',
+      relation: 'and',
+      children: [sampleItem],
+    },
+  ],
 }
 
 const conditionsSlice = createSlice({
@@ -15,23 +27,17 @@ const conditionsSlice = createSlice({
   initialState,
   reducers: {
     addCondition: (state) => {
-      const existingGroup = state.conditions.find((item) => item.type === 'group')
-      if (!existingGroup) {
-        state.conditions.push({ ...sampleItem, id: String(Date.now()) })
-        return
+      const rootGroup = state.conditions[0]
+      if (rootGroup && rootGroup.type === 'group') {
+        rootGroup.children.push({ ...sampleItem, id: String(Date.now()) })
       }
-      const updatedGroup = {
-        ...existingGroup,
-        children: [...existingGroup.children, { ...sampleItem, id: String(Date.now()) }]
-      }
-      state.conditions = [updatedGroup]
     },
 
     deleteCondition: (state, action: PayloadAction<string>) => {
       const deleteFromArray = (items: Array<Condition>): Array<Condition> => {
         const result: Array<Condition> = []
 
-        items.forEach(item => {
+        items.forEach((item) => {
           if (item.id === action.payload) {
             return
           }
@@ -76,25 +82,31 @@ const conditionsSlice = createSlice({
       state.conditions = [newGroup]
     },
 
-    createNestedGroup: (state, action: PayloadAction<Set<string>>) => {
-      const selectedIds = action.payload
+    createNestedGroup: (state, action: PayloadAction<Array<string>>) => {
+      const selectedIds = new Set(action.payload)
       if (selectedIds.size < 2) {
         return
       }
 
-      const findAndGroup = (items: Array<Condition>): Array<Condition> => {
+      const findAndGroup = (items: Array<Condition>): { items: Array<Condition>; grouped: boolean } => {
         const selected: Array<Condition> = []
         const remaining: Array<Condition> = []
+        let hasGrouped = false
 
-        items.forEach(item => {
+        items.forEach((item) => {
           if (item.type === 'condition' && selectedIds.has(item.id)) {
             selected.push(item)
           } else if (item.type === 'group') {
-            const updatedGroup = {
-              ...item,
-              children: findAndGroup(item.children),
+            const result = findAndGroup(item.children)
+            if (result.grouped) {
+              hasGrouped = true
+              remaining.push({
+                ...item,
+                children: result.items,
+              })
+            } else {
+              remaining.push(item)
             }
-            remaining.push(updatedGroup)
           } else {
             remaining.push(item)
           }
@@ -107,18 +119,23 @@ const conditionsSlice = createSlice({
             relation: 'or',
             children: selected,
           }
-          return [...remaining, newGroup]
+          return { items: [...remaining, newGroup], grouped: true }
         }
 
-        return items
+        if (hasGrouped) {
+          return { items: [...selected, ...remaining], grouped: true }
+        }
+
+        return { items, grouped: false }
       }
 
-      state.conditions = findAndGroup(state.conditions)
+      const result = findAndGroup(state.conditions)
+      state.conditions = result.items
     },
 
     changeRuleType: (state, action: PayloadAction<{ id: string; ruleType: 'valueBased' | 'metricBased' }>) => {
       const updateRuleType = (items: Array<Condition>): Array<Condition> => {
-        return items.map(item => {
+        return items.map((item) => {
           if (item.type === 'condition' && item.id === action.payload.id) {
             return {
               ...item,
@@ -136,6 +153,129 @@ const conditionsSlice = createSlice({
 
       state.conditions = updateRuleType(state.conditions)
     },
+
+    ungroupGroup: (state, action: PayloadAction<string>) => {
+      const ungroupById = (items: Array<Condition>): Array<Condition> => {
+        const result: Array<Condition> = []
+
+        items.forEach((item) => {
+          if (item.type === 'group') {
+            if (item.id === action.payload) {
+              result.push(...item.children)
+            } else {
+              result.push({
+                ...item,
+                children: ungroupById(item.children),
+              })
+            }
+          } else {
+            result.push(item)
+          }
+        })
+
+        return result
+      }
+
+      state.conditions = ungroupById(state.conditions)
+    },
+
+    duplicateGroup: (state, action: PayloadAction<string>) => {
+      const duplicateById = (items: Array<Condition>): Array<Condition> => {
+        const result: Array<Condition> = []
+
+        items.forEach((item) => {
+          result.push(item)
+
+          if (item.id === action.payload) {
+            const duplicate = JSON.parse(JSON.stringify(current(item))) as Condition
+            const assignNewIds = (obj: Condition): void => {
+              obj.id = String(Date.now() + Math.random())
+              if (obj.type === 'group') {
+                obj.children.forEach(assignNewIds)
+              }
+            }
+            assignNewIds(duplicate)
+            result.push(duplicate)
+          } else if (item.type === 'group') {
+            result[result.length - 1] = {
+              ...item,
+              children: duplicateById(item.children),
+            }
+          }
+        })
+
+        return result
+      }
+
+      state.conditions = duplicateById(state.conditions)
+    },
+
+    deleteGroup: (state, action: PayloadAction<string>) => {
+      const deleteById = (items: Array<Condition>): Array<Condition> => {
+        return items
+          .filter((item) => item.id !== action.payload)
+          .map((item) => {
+            if (item.type === 'group') {
+              return {
+                ...item,
+                children: deleteById(item.children),
+              }
+            }
+            return item
+          })
+      }
+
+      state.conditions = deleteById(state.conditions)
+    },
+
+    updateRelation: (state, action: PayloadAction<{ id: string; relation: 'and' | 'or' }>) => {
+      const updateById = (items: Array<Condition>): Array<Condition> => {
+        return items.map((item) => {
+          if (item.type === 'group') {
+            if (item.id === action.payload.id) {
+              return {
+                ...item,
+                relation: action.payload.relation,
+              }
+            }
+            return {
+              ...item,
+              children: updateById(item.children),
+            }
+          }
+          return item
+        })
+      }
+
+      state.conditions = updateById(state.conditions)
+    },
+
+    updateConditionPayload: (state, action: PayloadAction<{ id: string; payload: ConditionPayloadUpdate }>) => {
+      const updateById = (items: Array<Condition>): Array<Condition> => {
+        return items.map((item) => {
+          if (item.type === 'condition' && item.id === action.payload.id) {
+            return {
+              ...item,
+              payload: {
+                ...item.payload,
+                [item.ruleType]: {
+                  ...item.payload[item.ruleType],
+                  ...action.payload.payload,
+                },
+              },
+            }
+          } else if (item.type === 'group') {
+            return {
+              ...item,
+              children: updateById(item.children),
+            }
+          }
+          return item
+        })
+      }
+
+      state.conditions = updateById(state.conditions)
+    },
   },
 })
 
@@ -145,6 +285,11 @@ export const {
   createGroup,
   createNestedGroup,
   changeRuleType,
+  ungroupGroup,
+  duplicateGroup,
+  deleteGroup,
+  updateRelation,
+  updateConditionPayload,
 } = conditionsSlice.actions
 
 export default conditionsSlice.reducer
