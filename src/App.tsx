@@ -4,7 +4,7 @@ import { TaskItem } from '@/components/task/task-item'
 import { IconPlus } from '@tabler/icons-react'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { addTask, selectAllTaskIds } from '@/store/slices/tasksSlice'
-import { ErrorBoundary, SectionErrorBoundary } from '@/components/ErrorBoundary'
+import { ErrorBoundary, SectionErrorBoundary } from '@/components/error-boundary/error-boundary'
 
 function App() {
   const dispatch = useAppDispatch()
