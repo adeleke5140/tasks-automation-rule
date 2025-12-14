@@ -6,8 +6,9 @@ import { ConditionTree } from './condition-tree'
 import { Preview } from './preview'
 import { notifications } from '@mantine/notifications'
 import { useAppDispatch, useAppSelector } from '../store/hooks'
-import { addCondition, createGroup, createNestedGroup } from '../store/slices/conditionsSlice'
-import { getSelectedIdsSet, clearSelection } from '../store/slices/selectionSlice'
+import { addCondition, createNestedGroup } from '../store/slices/conditionsSlice'
+import { clearSelection } from '../store/slices/selectionSlice'
+import classes from './task-item.module.scss'
 
 export type Relation = TypeRuleUnit['relation']
 
@@ -23,22 +24,20 @@ export type Condition = Group | RuleItem
 export const TaskItem = () => {
   const dispatch = useAppDispatch()
   const conditions = useAppSelector((state) => state.conditions.conditions)
-  const selectedIds = useAppSelector(getSelectedIdsSet)
+  const selectedIds = useAppSelector((state) => state.selection.selectedIds)
 
   const handleAddCondition = () => {
     dispatch(addCondition())
   }
 
   const handleCreateGroup = () => {
-    if (selectedIds.size >= 2) {
+    if (selectedIds.length >= 2) {
       dispatch(createNestedGroup(selectedIds))
       dispatch(clearSelection())
-    } else if (conditions.length > 1) {
-      dispatch(createGroup())
     } else {
       notifications.show({
         title: 'Group requires multiple conditions',
-        message: 'Add a new condition to create a new group',
+        message: 'Select at least 2 conditions to create a group',
       })
     }
   }
@@ -80,15 +79,7 @@ export const TaskItem = () => {
           <Tabs
             defaultValue="preview"
             variant="default"
-            styles={{
-              tab: {
-                '&[data-active]': {
-                  backgroundColor: 'transparent',
-                  color: 'var(--mantine-color-gray-9)',
-                  borderBottom: '2px solid var(--mantine-color-gray-9)',
-                },
-              },
-            }}
+            classNames={{ tab: classes.tab }}
           >
             <Tabs.List>
               <Tabs.Tab value="preview">Preview</Tabs.Tab>
