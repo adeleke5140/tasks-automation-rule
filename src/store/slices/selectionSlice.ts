@@ -1,44 +1,56 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import { deleteTask } from './tasksSlice'
 
 interface SelectionState {
-  selectedIds: string[]
+  byTaskId: Record<string, string[]>
 }
 
 const initialState: SelectionState = {
-  selectedIds: [],
+  byTaskId: {
+    'task-1': [],
+  },
 }
 
 const selectionSlice = createSlice({
   name: 'selection',
   initialState,
   reducers: {
-    toggleSelection: (state, action: PayloadAction<string>) => {
-      const index = state.selectedIds.indexOf(action.payload)
-      if (index !== -1) {
-        state.selectedIds.splice(index, 1)
+    toggleSelection: (state, action: PayloadAction<{ taskId: string; conditionId: string }>) => {
+      if (!state.byTaskId[action.payload.taskId]) {
+        state.byTaskId[action.payload.taskId] = []
+      }
+
+      const selectedIds = state.byTaskId[action.payload.taskId]
+      const index = selectedIds.indexOf(action.payload.conditionId)
+
+      if (index >= 0) {
+        selectedIds.splice(index, 1)
       } else {
-        state.selectedIds.push(action.payload)
+        selectedIds.push(action.payload.conditionId)
       }
     },
 
-    clearSelection: (state) => {
-      state.selectedIds = []
+    clearSelection: (state, action: PayloadAction<string>) => {
+      if (state.byTaskId[action.payload]) {
+        state.byTaskId[action.payload] = []
+      }
     },
-
-    selectMultiple: (state, action: PayloadAction<string[]>) => {
-      state.selectedIds = action.payload
-    },
-
-    removeFromSelection: (state, action: PayloadAction<string>) => {
-      state.selectedIds = state.selectedIds.filter((id) => id !== action.payload)
-    },
+  },
+  extraReducers: (builder) => {
+    // Clean up selection when a task is deleted
+    builder.addCase(deleteTask, (state, action) => {
+      delete state.byTaskId[action.payload]
+    })
   },
 })
 
-export const { toggleSelection, clearSelection, selectMultiple, removeFromSelection } = selectionSlice.actions
+export const { toggleSelection, clearSelection } = selectionSlice.actions
 
-export const isIdSelected = (state: { selection: SelectionState }, id: string): boolean => {
-  return state.selection.selectedIds.includes(id)
-}
+// Selectors
+export const selectTaskSelectedIds = (state: { selection: SelectionState }, taskId: string) =>
+  state.selection.byTaskId[taskId] || []
+
+export const isIdSelected = (state: { selection: SelectionState }, taskId: string, conditionId: string) =>
+  state.selection.byTaskId[taskId]?.includes(conditionId) || false
 
 export default selectionSlice.reducer
