@@ -9,7 +9,7 @@ import { Range } from '../range'
 import { RuleSelector } from '../rule-selector'
 import type { RuleTypeFormProps } from './rule-unit-form'
 
-export const MetricRuleForm = ({ ruleType, payload }: RuleTypeFormProps<'metricBased'>) => {
+export const MetricRuleForm = ({ id, ruleType, payload, onDelete, onChangeRuleType }: RuleTypeFormProps<'metricBased'>) => {
   const [selectedMetric, setSelectedMetric] = useState<TypeMetric>(payload?.metric || 'cost')
   const [selectedRange, setSelectedRange] = useState<TypeRange>(payload?.range || 'last_30_days')
   const [selectedComparisonMetric, setSelectedComparisonMetric] = useState<TypeMetric>(
@@ -32,7 +32,7 @@ export const MetricRuleForm = ({ ruleType, payload }: RuleTypeFormProps<'metricB
           <MetricWeight weight={selectedComparisonWeight} onWeightChange={setSelectedComparisionWeight} />
           <Metric selectedMetric={selectedComparisonMetric} onMetricChange={setSelectedComparisonMetric} isComparison />
           <Range selectedRange={selectedComparisonRange} onRangeChange={setSelectedComparisonRange} isComparison>
-            <RuleSelector ruleType={ruleType} setRuleType={() => {}} onDelete={() => {}} />
+            <RuleSelector ruleType={ruleType} setRuleType={onChangeRuleType} onDelete={() => onDelete(id)} />
           </Range>
         </Group>
       </Stack>
