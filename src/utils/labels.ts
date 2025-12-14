@@ -1,4 +1,4 @@
-import type { TypeMetric, TypeRange, TypeOperator } from '../types/client'
+import type { TypeMetric, TypeRange, TypeOperator } from '@/types/client'
 
 export const metricLabels: Record<TypeMetric, string> = {
   cost: 'Cost',
