@@ -1,6 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import type { TypeTask } from '@/types/client'
-import { deleteTask } from './tasksSlice'
+import { deleteTask, INITIAL_TASK_ID } from './tasksSlice'
 
 type Action = TypeTask['action']
 type ObjectType = TypeTask['objectType']
@@ -21,7 +21,7 @@ const createInitialAction = (): TaskActionState => ({
 
 const initialState: ActionState = {
   byTaskId: {
-    'task-1': createInitialAction(),
+    [INITIAL_TASK_ID]: createInitialAction(),
   },
 }
 
@@ -43,7 +43,6 @@ const actionSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // Clean up action when a task is deleted
     builder.addCase(deleteTask, (state, action) => {
       delete state.byTaskId[action.payload]
     })
@@ -52,7 +51,6 @@ const actionSlice = createSlice({
 
 export const { setSelectedAction, setObjectType } = actionSlice.actions
 
-// Selectors
 export const selectTaskAction = (state: { action: ActionState }, taskId: string) =>
   state.action.byTaskId[taskId]?.action
 
