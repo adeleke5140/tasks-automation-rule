@@ -1,6 +1,7 @@
 import { Combobox, Group, Paper, Text, useCombobox } from '@mantine/core'
 import { IconChevronDown, IconGripVertical } from '@tabler/icons-react'
 import type { TypeMetric } from '../types/client'
+import { metricLabels } from '../utils/labels'
 
 const metricOptions: TypeMetric[] = [
   'cost',
@@ -20,25 +21,6 @@ const metricOptions: TypeMetric[] = [
   'leads_value',
   'active_ads_in_adset',
 ] as const
-
-const metricLabels: Record<TypeMetric, string> = {
-  cost: 'Cost',
-  clicks: 'Clicks',
-  cpm: 'CPM',
-  cpc: 'CPC',
-  impressions: 'Impressions',
-  spend: 'Spend',
-  reach: 'Reach',
-  purchase_roas: 'Purchase ROAS',
-  current_bid: 'Current bid',
-  time_greater_than: 'Time greater than',
-  time_less_than: 'Time less than',
-  daily_budget: 'Daily Budget',
-  purchases: 'Purchases',
-  ctr: 'CTR',
-  leads_value: 'Leads Value',
-  active_ads_in_adset: 'Active Ads in Adset',
-}
 
 interface MetricProps {
   selectedMetric: TypeMetric
