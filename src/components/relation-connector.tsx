@@ -1,15 +1,23 @@
 import { Box, Group, Text } from '@mantine/core'
-import { useState } from 'react'
 import type { TypeRuleUnit } from '../types/client'
+import { useAppDispatch } from '../store/hooks'
+import { updateRelation } from '../store/slices/conditionsSlice'
 
 interface RelationConnectorProps {
-  connectionType: TypeRuleUnit['relation']
-  groupId?: string
+  relation: TypeRuleUnit['relation']
+  groupId: string
   children?: React.ReactNode
 }
 
-export const RelationConnector = ({ connectionType, children }: RelationConnectorProps) => {
-  const [relation, setRelation] = useState(connectionType)
+export const RelationConnector = ({ relation, groupId, children }: RelationConnectorProps) => {
+  const dispatch = useAppDispatch()
+
+  const handleToggleRelation = () => {
+    if (!relation) return
+    const newRelation = relation === 'and' ? 'or' : 'and'
+    dispatch(updateRelation({ id: groupId, relation: newRelation }))
+  }
+
   return (
     <Box
       component="button"
@@ -20,14 +28,7 @@ export const RelationConnector = ({ connectionType, children }: RelationConnecto
       style={{ borderRadius: '4px', zIndex: 2, border: 'transparent' }}
       bg={relation === 'and' ? 'm-blue.6' : 'm-orange.3'}
       w={'fit-content'}
-      onClick={() => {
-        if (!relation) return
-        if (relation === 'and') {
-          setRelation('or')
-        } else {
-          setRelation('and')
-        }
-      }}
+      onClick={handleToggleRelation}
     >
       <Box pos={'absolute'}>{children}</Box>
       <Group gap={0} dir="row" align="center" justify="center" h={'100%'}>
