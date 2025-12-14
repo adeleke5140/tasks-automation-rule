@@ -6,8 +6,8 @@ import { ConditionTree } from '@/components/condition/condition-tree'
 import { Preview } from '@/components/preview/preview'
 import { notifications } from '@mantine/notifications'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
-import { addCondition, createNestedGroup } from '@/store/slices/conditionsSlice'
-import { clearSelection } from '@/store/slices/selectionSlice'
+import { addCondition, createNestedGroup, selectTaskConditions } from '@/store/slices/conditionsSlice'
+import { clearSelection, selectTaskSelectedIds } from '@/store/slices/selectionSlice'
 import classes from './task-item.module.scss'
 
 export type Relation = TypeRuleUnit['relation']
@@ -21,19 +21,23 @@ export type Group = { id: string; type: 'group'; relation: Relation; children: A
 
 export type Condition = Group | RuleItem
 
-export const TaskItem = () => {
+interface TaskItemProps {
+  taskId: string
+}
+
+export const TaskItem = ({ taskId }: TaskItemProps) => {
   const dispatch = useAppDispatch()
-  const conditions = useAppSelector((state) => state.conditions.conditions)
-  const selectedIds = useAppSelector((state) => state.selection.selectedIds)
+  const conditions = useAppSelector((state) => selectTaskConditions(state, taskId))
+  const selectedIds = useAppSelector((state) => selectTaskSelectedIds(state, taskId))
 
   const handleAddCondition = () => {
-    dispatch(addCondition())
+    dispatch(addCondition(taskId))
   }
 
   const handleCreateGroup = () => {
     if (selectedIds.length >= 2) {
-      dispatch(createNestedGroup(selectedIds))
-      dispatch(clearSelection())
+      dispatch(createNestedGroup({ taskId, selectedIds }))
+      dispatch(clearSelection(taskId))
     } else {
       notifications.show({
         title: 'Group requires multiple conditions',
@@ -46,9 +50,9 @@ export const TaskItem = () => {
     <Paper p="xl" bg="m-pink.0" radius="md" className={classes.paper}>
       <Stack gap="lg">
         <Stack>
-          <Action />
+          <Action taskId={taskId} />
           {conditions.map((cond) => (
-            <ConditionTree key={cond.id} cond={cond} />
+            <ConditionTree key={cond.id} cond={cond} taskId={taskId} />
           ))}
         </Stack>
 
@@ -83,7 +87,7 @@ export const TaskItem = () => {
             </Tabs.List>
 
             <Tabs.Panel value="preview" pt="md">
-              <Preview />
+              <Preview taskId={taskId} />
             </Tabs.Panel>
 
             <Tabs.Panel value="description" pt="md">
