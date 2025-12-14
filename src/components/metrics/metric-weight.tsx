@@ -16,7 +16,6 @@ export const MetricWeight = ({
       w={80}
       style={{ minWidth: 40, display: 'flex', alignItems: 'center', gap: '8px', borderRight: '1px solid #C6C6C6' }}
     >
-      {/* //fix this */}
       <input
         type="number"
         value={weight}
