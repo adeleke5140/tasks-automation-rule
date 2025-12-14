@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import type { TypeTask } from '../../types/client'
+import type { TypeTask } from '@/types/client'
 
 type Action = TypeTask['action']
 type ObjectType = TypeTask['objectType']
@@ -11,7 +11,7 @@ interface ActionState {
 
 const initialState: ActionState = {
   selectedAction: 'pause',
-  objectType: 'adset', // Default to adset
+  objectType: 'adset',
 }
 
 const actionSlice = createSlice({
