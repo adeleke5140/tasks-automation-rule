@@ -22,12 +22,24 @@ export const Value = ({ selectedMetric, selectedValue, onValueChange, children }
       flex={1}
       style={{ borderTopRightRadius: '4px', borderBottomRightRadius: '4px' }}
     >
-      <Group align="cneter" justify="space-between" gap={8}>
+      <Group align="center" justify="space-between" gap={8}>
         <input
-          type="text"
+          type="number"
           value={selectedValue}
-          onChange={(e) => onValueChange(Number(e.target.value))}
-          placeholder={showCurrencySign ? '$' : ''}
+          onChange={(e) => {
+            const value = e.target.value
+            if (value === '') {
+              onValueChange(0)
+            } else {
+              const numValue = parseFloat(value)
+              if (!isNaN(numValue) && numValue >= 0) {
+                onValueChange(numValue)
+              }
+            }
+          }}
+          min="0"
+          step="0.01"
+          placeholder={showCurrencySign ? '$' : '0'}
           style={{
             border: 'none',
             outline: 'none',
