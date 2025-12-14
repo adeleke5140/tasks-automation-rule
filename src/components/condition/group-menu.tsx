@@ -17,13 +17,32 @@ export const GroupMenu = ({ onDuplicate, onUngroup, onDelete }: GroupMenuProps) 
       </Menu.Target>
 
       <Menu.Dropdown>
-        <Menu.Item leftSection={<IconCopy size={16} />} onClick={onDuplicate}>
+        <Menu.Item
+          leftSection={<IconCopy size={16} />}
+          onClick={(event) => {
+            event.stopPropagation()
+            onDuplicate()
+          }}
+        >
           Duplicate
         </Menu.Item>
-        <Menu.Item leftSection={<IconUnlink size={16} />} onClick={onUngroup}>
+        <Menu.Item
+          leftSection={<IconUnlink size={16} />}
+          onClick={(event) => {
+            event.stopPropagation()
+            onUngroup()
+          }}
+        >
           Ungroup
         </Menu.Item>
-        <Menu.Item leftSection={<IconTrash size={16} />} color="red" onClick={onDelete}>
+        <Menu.Item
+          leftSection={<IconTrash size={16} />}
+          color="red"
+          onClick={(event) => {
+            event.stopPropagation()
+            onDelete()
+          }}
+        >
           Delete
         </Menu.Item>
       </Menu.Dropdown>
