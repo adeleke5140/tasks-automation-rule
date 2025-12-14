@@ -1,15 +1,7 @@
 import { Combobox, Group, Paper, Text, useCombobox } from '@mantine/core'
 import { IconChevronDown } from '@tabler/icons-react'
 import type { TypeOperator } from '../types/client'
-
-const operatorLabels: Record<TypeOperator, string> = {
-  lt: '<',
-  lte: '≤',
-  gt: '>',
-  gte: '≥',
-  eq: '=',
-  ne: '≠',
-}
+import { operatorLabels } from '../utils/labels'
 
 const operatorDropdownLabels: Record<TypeOperator, string> = {
   gt: '> greater than',
