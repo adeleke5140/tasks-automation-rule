@@ -60,8 +60,15 @@ export const ConditionTree = ({ cond, isNested = false }: ConditionTreeProps) =>
   }
 
   return (
-    <SimpleGrid classNames={{ root: classes.conditionGrid }}>
-      <RelationConnector connectionType={cond.relation}>
+    <SimpleGrid
+      styles={{
+        root: {
+          gridTemplateColumns: '40px 1fr',
+          gap: 0,
+        },
+      }}
+    >
+      <RelationConnector connectionType={cond.relation} groupId={cond.id}>
         {isNested && (
           <GroupMenu
             onDuplicate={() => dispatch(duplicateGroup(cond.id))}
