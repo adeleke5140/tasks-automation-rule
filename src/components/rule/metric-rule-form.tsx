@@ -1,5 +1,4 @@
 import { Group, Stack } from '@mantine/core'
-import { useState } from 'react'
 import { type TypeMetric, type TypeOperator, type TypeRange } from '../../types/client'
 import { Connector } from '../connector/connector'
 import { Metric } from '../metric'
@@ -8,30 +7,47 @@ import { Operator } from '../operator'
 import { Range } from '../range'
 import { RuleSelector } from '../rule-selector'
 import type { RuleTypeFormProps } from './rule-unit-form'
+import { useAppDispatch } from '../../store/hooks'
+import { updateConditionPayload } from '../../store/slices/conditionsSlice'
 
 export const MetricRuleForm = ({ id, ruleType, payload, onDelete, onChangeRuleType }: RuleTypeFormProps<'metricBased'>) => {
-  const [selectedMetric, setSelectedMetric] = useState<TypeMetric>(payload?.metric || 'cost')
-  const [selectedRange, setSelectedRange] = useState<TypeRange>(payload?.range || 'last_30_days')
-  const [selectedComparisonMetric, setSelectedComparisonMetric] = useState<TypeMetric>(
-    payload?.comparisonMetric || 'cost'
-  )
-  const [selectedComparisonRange, setSelectedComparisonRange] = useState<TypeRange>(
-    payload?.comparisonMetricRange || 'last_30_days'
-  )
-  const [selectedComparisonWeight, setSelectedComparisionWeight] = useState(payload?.comparisonMetricWeight || 0)
-  const [selectedOperator, setSelectedOperator] = useState<TypeOperator>(payload?.operator || 'eq')
+  const dispatch = useAppDispatch()
+
+  const handleMetricChange = (metric: TypeMetric) => {
+    dispatch(updateConditionPayload({ id, payload: { metric } }))
+  }
+
+  const handleRangeChange = (range: TypeRange) => {
+    dispatch(updateConditionPayload({ id, payload: { range } }))
+  }
+
+  const handleOperatorChange = (operator: TypeOperator) => {
+    dispatch(updateConditionPayload({ id, payload: { operator } }))
+  }
+
+  const handleComparisonWeightChange = (comparisonMetricWeight: number) => {
+    dispatch(updateConditionPayload({ id, payload: { comparisonMetricWeight } }))
+  }
+
+  const handleComparisonMetricChange = (comparisonMetric: TypeMetric) => {
+    dispatch(updateConditionPayload({ id, payload: { comparisonMetric } }))
+  }
+
+  const handleComparisonRangeChange = (comparisonMetricRange: TypeRange) => {
+    dispatch(updateConditionPayload({ id, payload: { comparisonMetricRange } }))
+  }
 
   return (
     <Group pos="relative" gap={0} wrap="nowrap" align="stretch">
       <Connector />
       <Stack gap="lg" style={{ flex: 1 }}>
         <Group gap={0} wrap="nowrap">
-          <Metric selectedMetric={selectedMetric} onMetricChange={setSelectedMetric} />
-          <Range selectedRange={selectedRange} onRangeChange={setSelectedRange} />
-          <Operator selectedOperator={selectedOperator} onOperatorChange={setSelectedOperator} />
-          <MetricWeight weight={selectedComparisonWeight} onWeightChange={setSelectedComparisionWeight} />
-          <Metric selectedMetric={selectedComparisonMetric} onMetricChange={setSelectedComparisonMetric} isComparison />
-          <Range selectedRange={selectedComparisonRange} onRangeChange={setSelectedComparisonRange} isComparison>
+          <Metric selectedMetric={payload?.metric || 'cost'} onMetricChange={handleMetricChange} />
+          <Range selectedRange={payload?.range || 'last_30_days'} onRangeChange={handleRangeChange} />
+          <Operator selectedOperator={payload?.operator || 'eq'} onOperatorChange={handleOperatorChange} />
+          <MetricWeight weight={payload?.comparisonMetricWeight || 0} onWeightChange={handleComparisonWeightChange} />
+          <Metric selectedMetric={payload?.comparisonMetric || 'cost'} onMetricChange={handleComparisonMetricChange} isComparison />
+          <Range selectedRange={payload?.comparisonMetricRange || 'last_30_days'} onRangeChange={handleComparisonRangeChange} isComparison>
             <RuleSelector ruleType={ruleType} setRuleType={onChangeRuleType} onDelete={() => onDelete(id)} />
           </Range>
         </Group>
