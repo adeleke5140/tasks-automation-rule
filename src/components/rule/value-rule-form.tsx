@@ -9,10 +9,11 @@ import { Value } from '../value'
 import type { RuleTypeFormProps } from './rule-unit-form'
 import { Range } from '../range'
 
-export const ValueRuleForm = ({ ruleType, payload }: RuleTypeFormProps<'valueBased'>) => {
+export const ValueRuleForm = ({ id, ruleType, payload, onDelete, onChangeRuleType }: RuleTypeFormProps<'valueBased'>) => {
   const [selectedMetric, setSelectedMetric] = useState<TypeMetric>(payload?.metric || 'cost')
   const [selectedRange, setSelectedRange] = useState<TypeRange>(payload?.range || 'today')
   const [selectedOperator, setSelectedOperator] = useState(payload?.operator || 'lt')
+  const [selectedValue, setSelectedValue] = useState(payload?.value || 0)
   return (
     <Group pos="relative" gap={0} wrap="nowrap" align="stretch">
       <Connector />
@@ -22,8 +23,8 @@ export const ValueRuleForm = ({ ruleType, payload }: RuleTypeFormProps<'valueBas
           <Metric selectedMetric={selectedMetric} onMetricChange={setSelectedMetric} />
           <Range selectedRange={selectedRange} onRangeChange={setSelectedRange} />
           <Operator selectedOperator={selectedOperator} onOperatorChange={setSelectedOperator} />
-          <Value selectedMetric={selectedMetric}>
-            <RuleSelector ruleType={ruleType} setRuleType={() => {}} onDelete={() => {}} />
+          <Value selectedMetric={selectedMetric} selectedValue={selectedValue} onValueChange={setSelectedValue}>
+            <RuleSelector ruleType={ruleType} setRuleType={onChangeRuleType} onDelete={() => onDelete(id)} />
           </Value>
         </Group>
       </Stack>
