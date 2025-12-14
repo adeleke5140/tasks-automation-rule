@@ -37,6 +37,7 @@ const getConditionText = (item: RuleItem) => {
 
 const RenderGroup = ({ item, depth }: { item: Condition; depth: number }) => {
   if (item.type !== 'group') return null
+  if (item.children.length === 0) return null
   return (
     <Box key={item.id}>
       <Text size="sm" fw={500} c="gray.7" ml={depth * 10} mb="xs">
