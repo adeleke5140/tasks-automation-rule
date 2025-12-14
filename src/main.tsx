@@ -5,7 +5,7 @@ import { ThemeProvider } from '@/theme-provider.tsx'
 import '@mantine/core/styles.css'
 import '@mantine/notifications/styles.css'
 import '@fontsource-variable/ibm-plex-sans'
-import { store } from '@/stores/store.ts'
+import { store } from '@/store/store'
 import { Provider } from 'react-redux'
 
 createRoot(document.getElementById('root')!).render(
