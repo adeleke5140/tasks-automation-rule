@@ -68,7 +68,7 @@ export const ConditionTree = ({ cond, isNested = false }: ConditionTreeProps) =>
         },
       }}
     >
-      <RelationConnector connectionType={cond.relation} groupId={cond.id}>
+      <RelationConnector relation={cond.relation} groupId={cond.id}>
         {isNested && (
           <GroupMenu
             onDuplicate={() => dispatch(duplicateGroup(cond.id))}
