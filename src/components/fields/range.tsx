@@ -24,7 +24,7 @@ export const Range = ({ selectedRange, onRangeChange, children, isComparison }: 
       flex={1}
       style={{ borderRight: isComparison ? '' : '1px solid #c6c6c6' }}
     >
-      <Group align="center" justify="space-between" gap={0} flex={1}>
+      <Group align="center" justify="space-between" gap={0} flex={1.5}>
         <Combobox
           store={rangeCombobox}
           onOptionSubmit={(value) => {
