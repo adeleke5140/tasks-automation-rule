@@ -1,7 +1,7 @@
 import { Combobox, Group, Paper, Text, useCombobox } from '@mantine/core'
 import { IconChevronDown } from '@tabler/icons-react'
-import type { TypeRange } from '../types/client'
-import { rangeLabels } from '../utils/labels'
+import type { TypeRange } from '@/types/client'
+import { rangeLabels } from '@/utils/labels'
 
 interface RangeProps {
   selectedRange: TypeRange

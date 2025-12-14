@@ -1,13 +1,13 @@
 import { Button, Group, Paper, Stack, Tabs } from '@mantine/core'
 import { IconPlus } from '@tabler/icons-react'
-import type { TypeRuleUnit } from '../types/client'
-import { Action } from './action'
-import { ConditionTree } from './condition-tree'
-import { Preview } from './preview'
+import type { TypeRuleUnit } from '@/types/client'
+import { Action } from '@/components/fields/action'
+import { ConditionTree } from '@/components/condition/condition-tree'
+import { Preview } from '@/components/preview/preview'
 import { notifications } from '@mantine/notifications'
-import { useAppDispatch, useAppSelector } from '../store/hooks'
-import { addCondition, createNestedGroup } from '../store/slices/conditionsSlice'
-import { clearSelection } from '../store/slices/selectionSlice'
+import { useAppDispatch, useAppSelector } from '@/store/hooks'
+import { addCondition, createNestedGroup } from '@/store/slices/conditionsSlice'
+import { clearSelection } from '@/store/slices/selectionSlice'
 import classes from './task-item.module.scss'
 
 export type Relation = TypeRuleUnit['relation']
@@ -76,11 +76,7 @@ export const TaskItem = () => {
             </Button>
           </Group>
 
-          <Tabs
-            defaultValue="preview"
-            variant="default"
-            classNames={{ tab: classes.tab, root: classes.previewTabs }}
-          >
+          <Tabs defaultValue="preview" variant="default" classNames={{ tab: classes.tab, root: classes.previewTabs }}>
             <Tabs.List>
               <Tabs.Tab value="preview">Preview</Tabs.Tab>
               <Tabs.Tab value="description">Description</Tabs.Tab>

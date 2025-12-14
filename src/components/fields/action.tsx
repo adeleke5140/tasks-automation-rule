@@ -1,8 +1,8 @@
-import { Box, Combobox, Group, InputBase, Text, useCombobox, Menu, Button } from '@mantine/core'
+import { useAppDispatch, useAppSelector } from '@/store/hooks'
+import { selectAction, selectObjectType, setObjectType, setSelectedAction } from '@/store/slices/actionSlice'
+import type { TypeTask as TypeTaskType } from '@/types/client'
+import { Box, Combobox, Group, InputBase, Menu, Text, useCombobox } from '@mantine/core'
 import { IconChevronDown } from '@tabler/icons-react'
-import type { TypeTask as TypeTaskType } from '../types/client'
-import { useAppDispatch, useAppSelector } from '../store/hooks'
-import { selectAction, selectObjectType, setSelectedAction, setObjectType, getObjectTypeDisplay } from '../store/slices/actionSlice'
 
 type Action = TypeTaskType['action']
 type ObjectType = TypeTaskType['objectType']
@@ -85,15 +85,9 @@ export const Action = () => {
                     </Text>
                   </Menu.Target>
                   <Menu.Dropdown>
-                    <Menu.Item onClick={() => dispatch(setObjectType('campaign'))}>
-                      Campaign
-                    </Menu.Item>
-                    <Menu.Item onClick={() => dispatch(setObjectType('adset'))}>
-                      Ad Set
-                    </Menu.Item>
-                    <Menu.Item onClick={() => dispatch(setObjectType('ad'))}>
-                      Ad
-                    </Menu.Item>
+                    <Menu.Item onClick={() => dispatch(setObjectType('campaign'))}>Campaign</Menu.Item>
+                    <Menu.Item onClick={() => dispatch(setObjectType('adset'))}>Ad Set</Menu.Item>
+                    <Menu.Item onClick={() => dispatch(setObjectType('ad'))}>Ad</Menu.Item>
                   </Menu.Dropdown>
                 </Menu>
               </Box>

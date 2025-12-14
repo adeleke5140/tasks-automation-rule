@@ -1,9 +1,9 @@
 import { Box, Group, Stack, Text } from '@mantine/core'
-import { useAppSelector } from '../store/hooks'
-import { getObjectTypeDisplay } from '../store/slices/actionSlice'
-import { metricLabels, operatorLabels, rangeLabels } from '../utils/labels'
+import { useAppSelector } from '@/store/hooks'
+import { getObjectTypeDisplay } from '@/store/slices/actionSlice'
+import { metricLabels, operatorLabels, rangeLabels } from '@/utils/labels'
 import classes from './preview.module.scss'
-import type { Condition, RuleItem } from './task-item'
+import type { Condition, RuleItem } from '@/components/task/task-item'
 
 const getValueBasedText = (item: RuleItem) => {
   if (!item.payload.valueBased) return ''

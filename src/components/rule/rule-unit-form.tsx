@@ -1,8 +1,8 @@
 import { MetricRuleForm } from './metric-rule-form'
 import type { Payload, RuleType, RuleValues } from './types'
 import { ValueRuleForm } from './value-rule-form'
-import { useAppDispatch } from '../../store/hooks'
-import { changeRuleType } from '../../store/slices/conditionsSlice'
+import { useAppDispatch } from '@/store/hooks'
+import { changeRuleType } from '@/store/slices/conditionsSlice'
 
 export type SelectableProps = {
   isSelectable?: boolean

@@ -1,12 +1,12 @@
 import { SimpleGrid, Stack } from '@mantine/core'
 import { notifications } from '@mantine/notifications'
 import { RelationConnector } from './relation-connector'
-import { RuleUnitForm } from './rule/rule-unit-form'
+import { RuleUnitForm } from '@/components/rule/rule-unit-form'
 import { GroupMenu } from './group-menu'
-import type { Condition } from './task-item'
-import { useAppDispatch, useAppSelector } from '../store/hooks'
-import { deleteCondition, ungroupGroup, duplicateGroup, deleteGroup } from '../store/slices/conditionsSlice'
-import { toggleSelection, isIdSelected } from '../store/slices/selectionSlice'
+import type { Condition } from '@/components/task/task-item'
+import { useAppDispatch, useAppSelector } from '@/store/hooks'
+import { deleteCondition, ungroupGroup, duplicateGroup, deleteGroup } from '@/store/slices/conditionsSlice'
+import { toggleSelection, isIdSelected } from '@/store/slices/selectionSlice'
 import classes from './condition-tree.module.scss'
 
 type ConditionTreeProps = {

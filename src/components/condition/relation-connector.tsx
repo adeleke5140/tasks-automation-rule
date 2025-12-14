@@ -1,7 +1,7 @@
 import { Box, Group, Text } from '@mantine/core'
-import type { TypeRuleUnit } from '../types/client'
-import { useAppDispatch } from '../store/hooks'
-import { updateRelation } from '../store/slices/conditionsSlice'
+import type { TypeRuleUnit } from '@/types/client'
+import { useAppDispatch } from '@/store/hooks'
+import { updateRelation } from '@/store/slices/conditionsSlice'
 
 interface RelationConnectorProps {
   relation: TypeRuleUnit['relation']

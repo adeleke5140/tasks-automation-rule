@@ -1,5 +1,5 @@
 import { Group, Paper } from '@mantine/core'
-import type { TypeMetric } from '../types/client'
+import type { TypeMetric } from '@/types/client'
 
 interface ValueProps {
   selectedMetric: TypeMetric

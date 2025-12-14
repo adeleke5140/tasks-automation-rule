@@ -1,14 +1,14 @@
 import { Group, Stack } from '@mantine/core'
-import { type TypeMetric, type TypeOperator, type TypeRange } from '../../types/client'
-import { Connector } from '../connector/connector'
-import { Metric } from '../metric'
-import { MetricWeight } from '../metrics/metric-weight'
-import { Operator } from '../operator'
-import { Range } from '../range'
-import { RuleSelector } from '../rule-selector'
+import { type TypeMetric, type TypeOperator, type TypeRange } from '@/types/client'
+import { Connector } from '@/components/connector/connector'
+import { Metric } from '@/components/metrics/metric'
+import { MetricWeight } from '@/components/metrics/metric-weight'
+import { Operator } from '@/components/fields/operator'
+import { Range } from '@/components/fields/range'
+import { RuleSelector } from './rule-selector'
 import type { RuleTypeFormProps } from './rule-unit-form'
-import { useAppDispatch } from '../../store/hooks'
-import { updateConditionPayload } from '../../store/slices/conditionsSlice'
+import { useAppDispatch } from '@/store/hooks'
+import { updateConditionPayload } from '@/store/slices/conditionsSlice'
 
 export const MetricRuleForm = ({ id, ruleType, payload, onDelete, onChangeRuleType }: RuleTypeFormProps<'metricBased'>) => {
   const dispatch = useAppDispatch()

@@ -1,6 +1,6 @@
 import { Box } from '@mantine/core'
-import './connector.scss'
+import classes from './connector.module.scss'
 
 export const Connector = () => {
-  return <Box component="span" className="connector" />
+  return <Box component="span" className={classes.connector} />
 }

@@ -1,14 +1,14 @@
 import { Group, Stack } from '@mantine/core'
-import type { TypeMetric, TypeRange, TypeOperator } from '../../types/client'
-import { Connector } from '../connector/connector'
-import { Metric } from '../metric'
-import { Operator } from '../operator'
-import { RuleSelector } from '../rule-selector'
-import { Value } from '../value'
+import type { TypeMetric, TypeRange, TypeOperator } from '@/types/client'
+import { Connector } from '@/components/connector/connector'
+import { Metric } from '@/components/metrics/metric'
+import { Operator } from '@/components/fields/operator'
+import { RuleSelector } from './rule-selector'
+import { Value } from '@/components/fields/value'
 import type { RuleTypeFormProps } from './rule-unit-form'
-import { Range } from '../range'
-import { useAppDispatch } from '../../store/hooks'
-import { updateConditionPayload } from '../../store/slices/conditionsSlice'
+import { Range } from '@/components/fields/range'
+import { useAppDispatch } from '@/store/hooks'
+import { updateConditionPayload } from '@/store/slices/conditionsSlice'
 
 export const ValueRuleForm = ({
   id,

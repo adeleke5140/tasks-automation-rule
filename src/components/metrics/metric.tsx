@@ -1,7 +1,7 @@
 import { Combobox, Group, Paper, Text, useCombobox, Checkbox } from '@mantine/core'
 import { IconChevronDown } from '@tabler/icons-react'
-import type { TypeMetric } from '../types/client'
-import { metricLabels } from '../utils/labels'
+import type { TypeMetric } from '@/types/client'
+import { metricLabels } from '@/utils/labels'
 
 const metricOptions: TypeMetric[] = [
   'cost',

@@ -1,4 +1,4 @@
-import type { TypeRuleUnit } from '../../types/client'
+import type { TypeRuleUnit } from '@/types/client'
 
 export type Payload = TypeRuleUnit['payload']
 export type RuleType = TypeRuleUnit['ruleType']
