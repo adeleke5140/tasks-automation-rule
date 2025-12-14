@@ -1,11 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { newId } from '@/utils/id'
 
 interface TasksState {
   allIds: string[]
 }
 
+export const INITIAL_TASK_ID = newId('task')
+
 const initialState: TasksState = {
-  allIds: ['task-1'],
+  allIds: [INITIAL_TASK_ID],
 }
 
 const tasksSlice = createSlice({
@@ -13,8 +16,7 @@ const tasksSlice = createSlice({
   initialState,
   reducers: {
     addTask: (state) => {
-      const newId = `task-${Date.now()}`
-      state.allIds.push(newId)
+      state.allIds.push(newId('task'))
     },
 
     deleteTask: (state, action) => {
