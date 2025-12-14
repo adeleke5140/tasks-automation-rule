@@ -1,62 +1,71 @@
-import { Stack, Text, Box, Group } from '@mantine/core'
+import { Box, Group, Stack, Text } from '@mantine/core'
 import { useAppSelector } from '../store/hooks'
-import type { Condition } from './task-item'
-import { selectAction, selectObjectType, getObjectTypeDisplay } from '../store/slices/actionSlice'
-import { metricLabels, rangeLabels, operatorTextLabels } from '../utils/labels'
+import { getObjectTypeDisplay } from '../store/slices/actionSlice'
+import { metricLabels, operatorLabels, rangeLabels } from '../utils/labels'
+import classes from './preview.module.scss'
+import type { Condition, RuleItem } from './task-item'
+
+const getValueBasedText = (item: RuleItem) => {
+  if (!item.payload.valueBased) return ''
+  const { metric, range, operator, value } = item.payload.valueBased
+  return `${metricLabels[metric] || metric} ${rangeLabels[range] || range} ${operatorLabels[operator] || operator} ${value}`
+}
+
+const getMetricBasedText = (item: RuleItem) => {
+  if (!item.payload.metricBased) return ''
+  const { metric, comparisonMetric, operator, comparisonMetricWeight, comparisonMetricRange } = item.payload.metricBased
+  const baseMetric = metricLabels[metric] || metric
+  const comparison = comparisonMetric ? metricLabels[comparisonMetric] || comparisonMetric : ''
+  const op = operatorLabels[operator] || operator
+  const range = comparisonMetricRange ? rangeLabels[comparisonMetricRange] || comparisonMetricRange : ''
+  return `${baseMetric} is ${comparisonMetricWeight}% ${op} than ${comparison} ${range}`
+}
+
+const getConditionText = (item: RuleItem) => {
+  return item.ruleType === 'valueBased' ? getValueBasedText(item) : getMetricBasedText(item)
+}
+
+const RenderGroup = ({ item, depth }: { item: Condition; depth: number }) => {
+  if (item.type !== 'group') return null
+  return (
+    <Box key={item.id}>
+      <Text size="sm" fw={500} c="gray.7" ml={depth * 10} mb="xs">
+        {item.relation}
+      </Text>
+      <RenderConditionTree items={item.children} depth={depth + 1} />
+    </Box>
+  )
+}
+
+const RenderCondition = ({ item, depth }: { item: Condition; depth: number }) => {
+  if (item.type !== 'condition') return null
+  return (
+    <Box key={item.id} className={classes.conditionItem} ml={depth * 10}>
+      <Text size="sm" c="gray.7">
+        {getConditionText(item)}
+      </Text>
+    </Box>
+  )
+}
 
 const RenderConditionTree = ({ items, depth = 0 }: { items: Array<Condition>; depth?: number }) => {
   return (
     <Stack gap="xs">
-      {items.map((item) => {
-        if (item.type === 'group') {
-          return (
-            <Box key={item.id}>
-              <Text size="sm" fw={500} c="gray.7" ml={depth * 20} mb="xs">
-                {item.relation}
-              </Text>
-              <RenderConditionTree items={item.children} depth={depth + 1} />
-            </Box>
-          )
-        }
-
-        let conditionText = ''
-        if (item.ruleType === 'valueBased' && item.payload.valueBased) {
-          const { metric, range, operator, value } = item.payload.valueBased
-          conditionText = `${metricLabels[metric] || metric} ${rangeLabels[range] || range} ${operatorTextLabels[operator] || operator} ${value}`
-        } else if (item.ruleType === 'metricBased' && item.payload.metricBased) {
-          const { metric, comparisonMetric, operator, comparisonMetricWeight, comparisonMetricRange } = item.payload.metricBased
-          const baseMetric = metricLabels[metric] || metric
-          const comparison = comparisonMetric ? metricLabels[comparisonMetric] || comparisonMetric : ''
-          const op = operatorTextLabels[operator] || operator
-          const range = comparisonMetricRange ? rangeLabels[comparisonMetricRange] || comparisonMetricRange : ''
-          conditionText = `${baseMetric} is ${comparisonMetricWeight}% ${op} than ${comparison} ${range}`
-        }
-
-        return (
-          <Box
-            key={item.id}
-            style={{
-              marginLeft: depth * 20 + 20,
-              borderLeft: '3px solid #4C6EF5',
-              paddingLeft: 12,
-              paddingTop: 4,
-              paddingBottom: 4,
-            }}
-          >
-            <Text size="sm" c="gray.7">
-              {conditionText}
-            </Text>
-          </Box>
+      {items.map((item) =>
+        item.type === 'group' ? (
+          <RenderGroup key={item.id} item={item} depth={depth} />
+        ) : (
+          <RenderCondition key={item.id} item={item} depth={depth} />
         )
-      })}
+      )}
     </Stack>
   )
 }
 
 export const Preview = () => {
   const conditions = useAppSelector((state) => state.conditions.conditions)
-  const selectedAction = useAppSelector(selectAction)
-  const objectType = useAppSelector(selectObjectType)
+  const selectedAction = useAppSelector((state) => state.action.selectedAction)
+  const objectType = useAppSelector((state) => state.action.objectType)
 
   const actionDisplay = selectedAction.replace(/_/g, ' ')
 
@@ -69,7 +78,8 @@ export const Preview = () => {
   }
 
   const hasTopLevelGroup = conditions.length === 1 && conditions[0].type === 'group'
-  const topRelation = hasTopLevelGroup ? conditions[0].relation : 'and'
+  const relation = hasTopLevelGroup && conditions[0].type === 'group' ? conditions[0].relation : 'and'
+  const itemsToRender = hasTopLevelGroup && conditions[0].type === 'group' ? conditions[0].children : conditions
 
   return (
     <Stack gap="md" py="md">
@@ -82,27 +92,11 @@ export const Preview = () => {
         </Text>
       </Group>
 
-      <Box
-        style={{
-          borderLeft: '3px solid #4C6EF5',
-          paddingLeft: 16,
-        }}
-      >
-        {hasTopLevelGroup ? (
-          <>
-            <Text size="sm" fw={500} c="gray.7" mb="xs">
-              {topRelation}
-            </Text>
-            {conditions[0].type === 'group' && <RenderConditionTree items={conditions[0].children} depth={1} />}
-          </>
-        ) : (
-          <>
-            <Text size="sm" fw={500} c="gray.7" mb="xs">
-              and
-            </Text>
-            <RenderConditionTree items={conditions} depth={1} />
-          </>
-        )}
+      <Box pl={12} className={classes.previewContainer}>
+        <Text size="sm" fw={500} c="gray.7" mb="xs">
+          {relation}
+        </Text>
+        <RenderConditionTree items={itemsToRender} depth={1} />
       </Box>
     </Stack>
   )
