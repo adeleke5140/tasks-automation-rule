@@ -79,7 +79,7 @@ export const TaskItem = () => {
           <Tabs
             defaultValue="preview"
             variant="default"
-            classNames={{ tab: classes.tab }}
+            classNames={{ tab: classes.tab, root: classes.previewTabs }}
           >
             <Tabs.List>
               <Tabs.Tab value="preview">Preview</Tabs.Tab>
