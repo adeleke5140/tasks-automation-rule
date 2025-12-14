@@ -194,6 +194,11 @@ const conditionsSlice = createSlice({
       const conditions = state.byTaskId[action.payload.taskId]
       if (!conditions) return
 
+      const rootGroup = conditions[0]
+      if (rootGroup?.type === 'group' && rootGroup.id === action.payload.groupId) {
+        return
+      }
+
       const ungroupById = (items: Array<Condition>): Array<Condition> => {
         const result: Array<Condition> = []
 
@@ -274,6 +279,11 @@ const conditionsSlice = createSlice({
     deleteGroup: (state, action: PayloadAction<{ taskId: string; groupId: string }>) => {
       const conditions = state.byTaskId[action.payload.taskId]
       if (!conditions) return
+
+      const rootGroup = conditions[0]
+      if (rootGroup?.type === 'group' && rootGroup.id === action.payload.groupId) {
+        return
+      }
 
       const deleteById = (items: Array<Condition>): Array<Condition> => {
         return items
