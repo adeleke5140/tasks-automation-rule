@@ -2,22 +2,25 @@ import { SimpleGrid, Stack } from '@mantine/core'
 import { notifications } from '@mantine/notifications'
 import { RelationConnector } from './relation-connector'
 import { RuleUnitForm } from './rule/rule-unit-form'
+import { GroupMenu } from './group-menu'
 import type { Condition } from './task-item'
 import { useAppDispatch, useAppSelector } from '../store/hooks'
-import { deleteCondition } from '../store/slices/conditionsSlice'
+import { deleteCondition, ungroupGroup, duplicateGroup, deleteGroup } from '../store/slices/conditionsSlice'
 import { toggleSelection, isIdSelected } from '../store/slices/selectionSlice'
+import classes from './condition-tree.module.scss'
 
 type ConditionTreeProps = {
   cond: Condition
+  isNested?: boolean
 }
 
-export const ConditionTree = ({ cond }: ConditionTreeProps) => {
+export const ConditionTree = ({ cond, isNested = false }: ConditionTreeProps) => {
   const dispatch = useAppDispatch()
-  const isSelected = useAppSelector(state => isIdSelected(state, cond.id))
-  const totalConditions = useAppSelector(state => {
+  const isSelected = useAppSelector((state) => isIdSelected(state, cond.id))
+  const totalConditions = useAppSelector((state) => {
     let count = 0
     const countConditions = (items: Array<Condition>) => {
-      items.forEach(item => {
+      items.forEach((item) => {
         if (item.type === 'condition') count++
         else countConditions(item.children)
       })
@@ -32,7 +35,7 @@ export const ConditionTree = ({ cond }: ConditionTreeProps) => {
         notifications.show({
           title: 'Cannot delete',
           message: 'At least one condition must remain',
-          color: 'red'
+          color: 'red',
         })
         return
       }
@@ -46,7 +49,6 @@ export const ConditionTree = ({ cond }: ConditionTreeProps) => {
     return (
       <RuleUnitForm
         id={cond.id}
-        indicatorColor=""
         onDelete={handleDelete}
         ruleType={cond.ruleType}
         payload={cond.payload[cond.ruleType]}
@@ -58,18 +60,19 @@ export const ConditionTree = ({ cond }: ConditionTreeProps) => {
   }
 
   return (
-    <SimpleGrid
-      styles={{
-        root: {
-          gridTemplateColumns: '40px 1fr',
-          gap: 0,
-        },
-      }}
-    >
-      <RelationConnector connectionType={cond.relation} />
-      <Stack component={'div'} gap="md" style={{ flex: 1, marginLeft: '25px' }} data-relation="true">
+    <SimpleGrid classNames={{ root: classes.conditionGrid }}>
+      <RelationConnector connectionType={cond.relation}>
+        {isNested && (
+          <GroupMenu
+            onDuplicate={() => dispatch(duplicateGroup(cond.id))}
+            onUngroup={() => dispatch(ungroupGroup(cond.id))}
+            onDelete={() => dispatch(deleteGroup(cond.id))}
+          />
+        )}
+      </RelationConnector>
+      <Stack component={'div'} gap="md" className={classes.childrenStack} data-relation="true">
         {cond.children.map((item) => {
-          return <ConditionTree key={item.id} cond={item} />
+          return <ConditionTree key={item.id} cond={item} isNested={item.type === 'group'} />
         })}
       </Stack>
     </SimpleGrid>
