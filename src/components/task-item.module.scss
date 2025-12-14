@@ -5,3 +5,8 @@
     border-bottom: 2px solid var(--mantine-color-m-blue-6);
   }
 }
+
+.paper {
+  max-height: 80vh;
+  overflow-y: auto;
+}

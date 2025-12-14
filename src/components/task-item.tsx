@@ -43,7 +43,7 @@ export const TaskItem = () => {
   }
 
   return (
-    <Paper p="xl" bg="m-pink.0" radius="md">
+    <Paper p="xl" bg="m-pink.0" radius="md" className={classes.paper}>
       <Stack gap="lg">
         <Stack>
           <Action />
