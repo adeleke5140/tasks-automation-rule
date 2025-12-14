@@ -1,18 +1,16 @@
 import { Box, Button, Stack } from '@mantine/core'
-import { useState } from 'react'
 import { Header } from '@/components/header'
 import { TaskItem } from '@/components/task/task-item'
 import { IconPlus } from '@tabler/icons-react'
-
-interface Task {
-  id: string
-}
+import { useAppDispatch, useAppSelector } from '@/store/hooks'
+import { addTask, selectAllTaskIds } from '@/store/slices/tasksSlice'
 
 function App() {
-  const [tasks, setTasks] = useState<Task[]>([{ id: '1' }])
+  const dispatch = useAppDispatch()
+  const taskIds = useAppSelector(selectAllTaskIds)
 
-  const addTask = () => {
-    setTasks((prev) => [...prev, { id: (prev.length + 1).toString() }])
+  const handleAddTask = () => {
+    dispatch(addTask())
   }
 
   return (
@@ -21,13 +19,13 @@ function App() {
         <Header />
 
         <Stack gap={'md'}>
-          {tasks.map((task) => (
-            <TaskItem key={task.id} />
+          {taskIds.map((taskId) => (
+            <TaskItem key={taskId} taskId={taskId} />
           ))}
         </Stack>
 
         <Box>
-          <Button variant="filled" bg="gray.1" c="black" leftSection={<IconPlus size={16} />} onClick={addTask}>
+          <Button variant="filled" bg="gray.1" c="black" leftSection={<IconPlus size={16} />} onClick={handleAddTask}>
             Task
           </Button>
         </Box>
