@@ -4,7 +4,7 @@ import { selectTaskConditions } from '@/store/slices/conditionsSlice'
 import { selectTaskAction, selectTaskObjectType, getObjectTypeDisplay } from '@/store/slices/actionSlice'
 import { metricLabels, operatorLabels, rangeLabels } from '@/utils/labels'
 import classes from './preview.module.scss'
-import type { Condition, RuleItem } from '@/components/task/task-item'
+import type { Condition, RuleItem } from '@/components/task/types'
 
 interface PreviewProps {
   taskId: string
