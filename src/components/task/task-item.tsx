@@ -1,6 +1,5 @@
 import { Button, Group, Paper, Stack, Tabs } from '@mantine/core'
 import { IconPlus } from '@tabler/icons-react'
-import type { TypeRuleUnit } from '@/types/client'
 import { Action } from '@/components/fields/action'
 import { ConditionTree } from '@/components/condition/condition-tree'
 import { Preview } from '@/components/preview/preview'
@@ -9,17 +8,6 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { addCondition, createNestedGroup, selectTaskConditions } from '@/store/slices/conditionsSlice'
 import { clearSelection, selectTaskSelectedIds } from '@/store/slices/selectionSlice'
 import classes from './task-item.module.scss'
-
-export type Relation = TypeRuleUnit['relation']
-
-export type RuleItem = TypeRuleUnit & {
-  id: string
-  type: 'condition'
-}
-
-export type Group = { id: string; type: 'group'; relation: Relation; children: Array<Condition> }
-
-export type Condition = Group | RuleItem
 
 interface TaskItemProps {
   taskId: string
