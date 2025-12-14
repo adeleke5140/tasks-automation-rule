@@ -23,15 +23,31 @@ export const TaskItem = ({ taskId }: TaskItemProps) => {
   }
 
   const handleCreateGroup = () => {
-    if (selectedIds.length >= 2) {
-      dispatch(createNestedGroup({ taskId, selectedIds }))
-      dispatch(clearSelection(taskId))
-    } else {
+    if (selectedIds.length < 2) {
       notifications.show({
         title: 'Group requires multiple conditions',
         message: 'Select at least 2 conditions to create a group',
       })
+      return
     }
+
+    const rootGroup = conditions[0]
+    if (rootGroup && rootGroup.type === 'group') {
+      const rootChildIds = new Set(rootGroup.children.map((child) => child.id))
+      const allAtRootLevel = selectedIds.every((id) => rootChildIds.has(id))
+
+      if (!allAtRootLevel) {
+        notifications.show({
+          title: 'Cannot create nested groups',
+          message: 'Only conditions at the root level can be grouped together',
+          color: 'orange',
+        })
+        return
+      }
+    }
+
+    dispatch(createNestedGroup({ taskId, selectedIds }))
+    dispatch(clearSelection(taskId))
   }
 
   return (
