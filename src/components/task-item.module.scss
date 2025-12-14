@@ -1,0 +1,7 @@
+.tab {
+  &[data-active] {
+    background-color: transparent;
+    color: var(--mantine-color-m-blue-6);
+    border-bottom: 2px solid var(--mantine-color-m-blue-6);
+  }
+}
