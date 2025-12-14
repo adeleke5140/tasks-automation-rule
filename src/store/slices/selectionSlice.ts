@@ -41,8 +41,4 @@ export const isIdSelected = (state: { selection: SelectionState }, id: string): 
   return state.selection.selectedIds.includes(id)
 }
 
-export const getSelectedIdsSet = (state: { selection: SelectionState }): Set<string> => {
-  return new Set(state.selection.selectedIds)
-}
-
 export default selectionSlice.reducer
