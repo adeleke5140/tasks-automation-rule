@@ -1,12 +1,13 @@
-import type { Group, RuleItem } from '../components/task-item'
+import type { Group, RuleItem } from '@/components/task/types'
+import { newId } from '@/utils/id'
 
 export const sampleGroup: Group = {
-  id: '1',
+  id: newId('group'),
   relation: 'and',
   type: 'group',
   children: [
     {
-      id: '1',
+      id: newId('condition'),
       ruleType: 'valueBased',
       type: 'condition',
       payload: {
@@ -21,7 +22,7 @@ export const sampleGroup: Group = {
       children: [],
     },
     {
-      id: '2',
+      id: newId('condition'),
       type: 'condition',
       ruleType: 'valueBased',
       payload: {
@@ -36,12 +37,12 @@ export const sampleGroup: Group = {
       children: [],
     },
     {
-      id: '3',
+      id: newId('group'),
       relation: 'or',
       type: 'group',
       children: [
         {
-          id: '4',
+          id: newId('condition'),
           type: 'condition',
           ruleType: 'valueBased',
           payload: {
@@ -56,7 +57,7 @@ export const sampleGroup: Group = {
           children: [],
         },
         {
-          id: '5',
+          id: newId('condition'),
           type: 'condition',
           ruleType: 'valueBased',
           payload: {
@@ -72,11 +73,26 @@ export const sampleGroup: Group = {
         },
       ],
     },
+    {
+      id: newId('condition'),
+      type: 'condition',
+      ruleType: 'valueBased',
+      relation: '',
+      payload: {
+        valueBased: {
+          metric: 'clicks',
+          range: 'today',
+          operator: 'lt',
+          value: 100,
+        },
+      },
+      children: [],
+    },
   ],
 }
 
 export const sampleItem = {
-  id: '1',
+  id: newId('condition'),
   type: 'condition',
   ruleType: 'valueBased',
   payload: {
