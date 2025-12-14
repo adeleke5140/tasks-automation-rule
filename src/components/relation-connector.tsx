@@ -1,13 +1,20 @@
 import { Box, Group, Text } from '@mantine/core'
-import type { TypeRuleUnit } from '../types/client'
 import { useState } from 'react'
+import type { TypeRuleUnit } from '../types/client'
 
-export const RelationConnector = ({ connectionType }: { connectionType: TypeRuleUnit['relation'] }) => {
+interface RelationConnectorProps {
+  connectionType: TypeRuleUnit['relation']
+  groupId?: string
+  children?: React.ReactNode
+}
+
+export const RelationConnector = ({ connectionType, children }: RelationConnectorProps) => {
   const [relation, setRelation] = useState(connectionType)
   return (
     <Box
       component="button"
       type="button"
+      pos="relative"
       mr={0}
       p="sm"
       style={{ borderRadius: '4px', zIndex: 2, border: 'transparent' }}
@@ -22,6 +29,7 @@ export const RelationConnector = ({ connectionType }: { connectionType: TypeRule
         }
       }}
     >
+      <Box pos={'absolute'}>{children}</Box>
       <Group gap={0} dir="row" align="center" justify="center" h={'100%'}>
         <Text
           style={{
