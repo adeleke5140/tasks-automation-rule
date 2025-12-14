@@ -1,0 +1,9 @@
+.conditionGrid {
+  grid-template-columns: 40px 1fr;
+  gap: 0;
+}
+
+.childrenStack {
+  flex: 1;
+  margin-left: 25px;
+}
