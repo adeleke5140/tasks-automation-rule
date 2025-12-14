@@ -1,8 +1,9 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import type { Condition, Group } from '@/components/task/task-item'
+import { newId } from '@/utils/id'
+import type { Condition, Group } from '@/components/task/types'
 import { sampleItem } from '@/data/data'
 import type { TypeRuleUnit } from '@/types/client'
-import { deleteTask } from './tasksSlice'
+import { deleteTask, INITIAL_TASK_ID } from './tasksSlice'
 
 type ConditionPayloadUpdate =
   | Partial<NonNullable<TypeRuleUnit['payload']['valueBased']>>
@@ -14,16 +15,16 @@ interface ConditionsState {
 
 const createInitialConditions = (): Array<Condition> => [
   {
-    id: 'root-group',
+    id: newId('root'),
     type: 'group',
     relation: 'and',
-    children: [sampleItem],
+    children: [{ ...sampleItem, id: newId('condition') }],
   },
 ]
 
 const initialState: ConditionsState = {
   byTaskId: {
-    'task-1': createInitialConditions(),
+    [INITIAL_TASK_ID]: createInitialConditions(),
   },
 }
 
@@ -34,7 +35,6 @@ const conditionsSlice = createSlice({
     addCondition: (state, action: PayloadAction<string>) => {
       const taskId = action.payload
 
-      // Lazy initialization - create conditions if they don't exist
       if (!state.byTaskId[taskId]) {
         state.byTaskId[taskId] = createInitialConditions()
       }
@@ -43,7 +43,7 @@ const conditionsSlice = createSlice({
 
       const rootGroup = conditions[0]
       if (rootGroup && rootGroup.type === 'group') {
-        rootGroup.children.push({ ...sampleItem, id: String(Date.now()) })
+        rootGroup.children.push({ ...sampleItem, id: newId('condition') })
       }
     },
 
@@ -121,7 +121,7 @@ const conditionsSlice = createSlice({
 
         if (selected.length >= 2) {
           const newGroup: Group = {
-            id: String(Date.now()),
+            id: newId('group'),
             type: 'group',
             relation: 'or',
             children: selected,
@@ -152,10 +152,9 @@ const conditionsSlice = createSlice({
           if (item.type === 'condition' && item.id === action.payload.conditionId) {
             const newRuleType = action.payload.ruleType
 
-            // Initialize the payload for the new rule type if it doesn't exist
-            const newPayload = { ...item.payload }
-            if (newRuleType === 'metricBased' && !newPayload.metricBased) {
-              // Initialize with default metric-based values
+            const newPayload: TypeRuleUnit['payload'] = {}
+
+            if (newRuleType === 'metricBased') {
               newPayload.metricBased = {
                 metric: item.payload.valueBased?.metric || 'cost',
                 range: item.payload.valueBased?.range || 'last_30_days',
@@ -164,8 +163,7 @@ const conditionsSlice = createSlice({
                 comparisonMetric: 'cost',
                 comparisonMetricRange: 'last_30_days',
               }
-            } else if (newRuleType === 'valueBased' && !newPayload.valueBased) {
-              // Initialize with default value-based values
+            } else if (newRuleType === 'valueBased') {
               newPayload.valueBased = {
                 metric: item.payload.metricBased?.metric || 'cost',
                 range: item.payload.metricBased?.range || 'today',
@@ -228,7 +226,7 @@ const conditionsSlice = createSlice({
         if (condition.type === 'condition') {
           return {
             ...condition,
-            id: String(Date.now() + Math.random()),
+            id: newId('condition'),
             payload: {
               ...condition.payload,
               [condition.ruleType]: { ...condition.payload[condition.ruleType] },
@@ -236,7 +234,7 @@ const conditionsSlice = createSlice({
           }
         } else {
           return {
-            id: String(Date.now() + Math.random()),
+            id: newId('group'),
             type: 'group' as const,
             relation: condition.relation,
             children: condition.children.map(cloneCondition),
@@ -249,12 +247,10 @@ const conditionsSlice = createSlice({
 
         items.forEach((item) => {
           if (item.id === action.payload.groupId) {
-            // Found the item to duplicate - push both original and duplicate
             result.push(item)
             const duplicate = cloneCondition(item)
             result.push(duplicate)
           } else if (item.type === 'group') {
-            // Process groups that might contain the item to duplicate
             result.push({
               ...item,
               type: 'group',
@@ -262,7 +258,6 @@ const conditionsSlice = createSlice({
               children: duplicateById(item.children),
             })
           } else {
-            // Regular items - just push as-is
             result.push(item)
           }
         })
@@ -294,10 +289,7 @@ const conditionsSlice = createSlice({
       state.byTaskId[action.payload.taskId] = deleteById(conditions)
     },
 
-    updateRelation: (
-      state,
-      action: PayloadAction<{ taskId: string; groupId: string; relation: 'and' | 'or' }>
-    ) => {
+    updateRelation: (state, action: PayloadAction<{ taskId: string; groupId: string; relation: 'and' | 'or' }>) => {
       const conditions = state.byTaskId[action.payload.taskId]
       if (!conditions) return
 
@@ -356,7 +348,6 @@ const conditionsSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // Clean up conditions when a task is deleted
     builder.addCase(deleteTask, (state, action) => {
       delete state.byTaskId[action.payload]
     })
@@ -375,9 +366,7 @@ export const {
   updateConditionPayload,
 } = conditionsSlice.actions
 
-// Selectors
 export const selectTaskConditions = (state: { conditions: ConditionsState }, taskId: string) => {
-  // Return existing conditions or initial conditions for new tasks
   return state.conditions.byTaskId[taskId] || createInitialConditions()
 }
 
