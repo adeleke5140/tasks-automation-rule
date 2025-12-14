@@ -1,5 +1,5 @@
-import { Combobox, Group, Paper, Text, useCombobox } from '@mantine/core'
-import { IconChevronDown, IconGripVertical } from '@tabler/icons-react'
+import { Combobox, Group, Paper, Text, useCombobox, Checkbox } from '@mantine/core'
+import { IconChevronDown } from '@tabler/icons-react'
 import type { TypeMetric } from '../types/client'
 import { metricLabels } from '../utils/labels'
 
@@ -26,9 +26,12 @@ interface MetricProps {
   selectedMetric: TypeMetric
   onMetricChange: (metric: TypeMetric) => void
   isComparison?: boolean
+  isSelectable?: boolean
+  isSelected?: boolean
+  onToggleSelection?: () => void
 }
 
-export const Metric = ({ selectedMetric, onMetricChange, isComparison }: MetricProps) => {
+export const Metric = ({ selectedMetric, onMetricChange, isComparison, isSelectable, isSelected, onToggleSelection }: MetricProps) => {
   const metricCombobox = useCombobox()
 
   return (
@@ -54,7 +57,21 @@ export const Metric = ({ selectedMetric, onMetricChange, isComparison }: MetricP
           onClick={() => metricCombobox.toggleDropdown()}
         >
           <Group align="center" gap={8}>
-            {!isComparison ? <IconGripVertical size={20} style={{ color: 'var(--mantine-color-gray-5)' }} /> : null}
+            {!isComparison && isSelectable && onToggleSelection ? (
+              <Checkbox
+                checked={isSelected}
+                onChange={(e) => {
+                  e.stopPropagation()
+                  onToggleSelection()
+                }}
+                onClick={(e) => e.stopPropagation()}
+                styles={{
+                  input: {
+                    cursor: 'pointer'
+                  }
+                }}
+              />
+            ) : null}
 
             <Group justify="space-between" wrap="nowrap" gap="xs" style={{ flex: 1 }}>
               <Text size="sm">{metricLabels[selectedMetric]}</Text>
