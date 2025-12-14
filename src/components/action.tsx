@@ -1,9 +1,11 @@
-import { Box, Combobox, Group, InputBase, Text, useCombobox } from '@mantine/core'
+import { Box, Combobox, Group, InputBase, Text, useCombobox, Menu, Button } from '@mantine/core'
 import { IconChevronDown } from '@tabler/icons-react'
-import { useState } from 'react'
 import type { TypeTask as TypeTaskType } from '../types/client'
+import { useAppDispatch, useAppSelector } from '../store/hooks'
+import { selectAction, selectObjectType, setSelectedAction, setObjectType, getObjectTypeDisplay } from '../store/slices/actionSlice'
 
 type Action = TypeTaskType['action']
+type ObjectType = TypeTaskType['objectType']
 
 const actionLabels: Record<Action, string> = {
   pause: 'Pause',
@@ -19,9 +21,17 @@ const actionLabels: Record<Action, string> = {
   notify: 'Notify',
 }
 
+const objectTypeLabels: Record<ObjectType, string> = {
+  campaign: 'Campaign',
+  adset: 'Ad Set',
+  ad: 'Ad',
+}
+
 export const Action = () => {
   const combobox = useCombobox()
-  const [selectedAction, setSelectedAction] = useState<Action>('pause')
+  const dispatch = useAppDispatch()
+  const selectedAction = useAppSelector(selectAction)
+  const objectType = useAppSelector(selectObjectType)
 
   const actionOptions: Action[] = [
     'pause',
@@ -40,7 +50,7 @@ export const Action = () => {
     <Combobox
       store={combobox}
       onOptionSubmit={(value) => {
-        setSelectedAction(value as Action)
+        dispatch(setSelectedAction(value as Action))
         combobox.closeDropdown()
       }}
     >
@@ -67,9 +77,26 @@ export const Action = () => {
               <Text size="lg" fw={500} c="m-blue.6">
                 {actionLabels[selectedAction]}
               </Text>
-              <Text size="sm" c="gray.6">
-                Ad Group
-              </Text>
+              <Box onClick={(e) => e.stopPropagation()}>
+                <Menu shadow="md" width={200}>
+                  <Menu.Target>
+                    <Text size="sm" c="gray.6" style={{ cursor: 'pointer' }}>
+                      {objectTypeLabels[objectType]} ▾
+                    </Text>
+                  </Menu.Target>
+                  <Menu.Dropdown>
+                    <Menu.Item onClick={() => dispatch(setObjectType('campaign'))}>
+                      Campaign
+                    </Menu.Item>
+                    <Menu.Item onClick={() => dispatch(setObjectType('adset'))}>
+                      Ad Set
+                    </Menu.Item>
+                    <Menu.Item onClick={() => dispatch(setObjectType('ad'))}>
+                      Ad
+                    </Menu.Item>
+                  </Menu.Dropdown>
+                </Menu>
+              </Box>
             </Box>
             <IconChevronDown size={20} color="var(--mantine-color-gray-7)" />
           </Group>
