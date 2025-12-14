@@ -3,7 +3,7 @@ import { notifications } from '@mantine/notifications'
 import { RelationConnector } from './relation-connector'
 import { RuleUnitForm } from '@/components/rule/rule-unit-form'
 import { GroupMenu } from './group-menu'
-import type { Condition } from '@/components/task/task-item'
+import type { Condition } from '@/components/task/types'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import {
   deleteCondition,
