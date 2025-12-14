@@ -9,6 +9,7 @@ import { RuleSelector } from './rule-selector'
 import type { RuleTypeFormProps } from './rule-unit-form'
 import { useAppDispatch } from '@/store/hooks'
 import { updateConditionPayload } from '@/store/slices/conditionsSlice'
+import { RangeMetric } from '../fields/range-metric'
 
 export const MetricRuleForm = ({
   id,
@@ -53,10 +54,18 @@ export const MetricRuleForm = ({
           <Range selectedRange={payload?.range || 'last_30_days'} onRangeChange={handleRangeChange} />
           <Operator selectedOperator={payload?.operator || 'eq'} onOperatorChange={handleOperatorChange} />
           <MetricWeight weight={payload?.comparisonMetricWeight || 0} onWeightChange={handleComparisonWeightChange} />
-          <Metric selectedMetric={payload?.comparisonMetric || 'cost'} onMetricChange={handleComparisonMetricChange} isComparison />
-          <Range selectedRange={payload?.comparisonMetricRange || 'last_30_days'} onRangeChange={handleComparisonRangeChange} isComparison>
+          <Metric
+            selectedMetric={payload?.comparisonMetric || 'cost'}
+            onMetricChange={handleComparisonMetricChange}
+            isComparison
+          />
+          <RangeMetric
+            selectedRange={payload?.comparisonMetricRange || 'last_30_days'}
+            onRangeChange={handleComparisonRangeChange}
+            isComparison
+          >
             <RuleSelector ruleType={ruleType} setRuleType={onChangeRuleType} onDelete={() => onDelete(id)} />
-          </Range>
+          </RangeMetric>
         </Group>
       </Stack>
     </Group>
