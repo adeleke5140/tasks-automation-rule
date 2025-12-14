@@ -5,11 +5,15 @@ import { ThemeProvider } from './theme-provider.tsx'
 import '@mantine/core/styles.css'
 import '@mantine/notifications/styles.css'
 import '@fontsource-variable/ibm-plex-sans'
+import { store } from './stores/store.ts'
+import { Provider } from 'react-redux'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ThemeProvider>
-      <App />
+      <Provider store={store}>
+        <App />
+      </Provider>
     </ThemeProvider>
   </StrictMode>
 )
