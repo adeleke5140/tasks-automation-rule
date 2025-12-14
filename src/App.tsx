@@ -1,7 +1,7 @@
 import { Box, Button, Stack } from '@mantine/core'
 import { useState } from 'react'
-import { Header } from './components/header'
-import { TaskItem } from './components/task-item'
+import { Header } from '@/components/header'
+import { TaskItem } from '@/components/task/task-item'
 import { IconPlus } from '@tabler/icons-react'
 
 interface Task {
