@@ -1,15 +1,7 @@
 import { Combobox, Group, Paper, Text, useCombobox } from '@mantine/core'
 import { IconChevronDown } from '@tabler/icons-react'
 import type { TypeRange } from '../types/client'
-
-const rangeLabels: Record<TypeRange, string> = {
-  yesterday: 'Yesterday',
-  today: 'Today',
-  last_3_days: 'Last 3 days',
-  last_7_days: 'Last 7 days',
-  last_15_days: 'Last 15 days',
-  last_30_days: 'Last 30 days',
-}
+import { rangeLabels } from '../utils/labels'
 
 interface RangeProps {
   selectedRange: TypeRange
