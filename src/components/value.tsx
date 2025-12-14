@@ -1,16 +1,16 @@
 import { Group, Paper } from '@mantine/core'
-import { useState } from 'react'
 import type { TypeMetric } from '../types/client'
 
 interface ValueProps {
   selectedMetric: TypeMetric
+  selectedValue: number
+  onValueChange: (item: number) => void
   children: React.ReactNode
 }
 
 const metricsWithCurrency: TypeMetric[] = ['cpm', 'cost', 'spend', 'purchase_roas', 'current_bid', 'daily_budget']
 
-export const Value = ({ selectedMetric, children }: ValueProps) => {
-  const [value, setValue] = useState('0')
+export const Value = ({ selectedMetric, selectedValue, onValueChange, children }: ValueProps) => {
   const showCurrencySign = metricsWithCurrency.includes(selectedMetric)
 
   return (
@@ -25,8 +25,8 @@ export const Value = ({ selectedMetric, children }: ValueProps) => {
       <Group align="cneter" justify="space-between" gap={8}>
         <input
           type="text"
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
+          value={selectedValue}
+          onChange={(e) => onValueChange(Number(e.target.value))}
           placeholder={showCurrencySign ? '$' : ''}
           style={{
             border: 'none',
