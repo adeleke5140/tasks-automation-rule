@@ -1,6 +1,7 @@
 import React, { type ReactNode } from 'react'
-import { Alert, Button, Container, Stack, Text } from '@mantine/core'
+import { Alert, Box, Button, Code, Container, Stack, Text } from '@mantine/core'
 import { ErrorBoundary as ReactErrorBoundary, type FallbackProps } from 'react-error-boundary'
+import classes from './error-boundary.module.scss'
 
 const ErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
   return (
@@ -12,24 +13,26 @@ const ErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
           </Text>
 
           {error && (
-            <div>
+            <Box>
               <Text size="xs" fw={600}>
                 Error Details:
               </Text>
-              <Text size="xs" c="dimmed" style={{ fontFamily: 'monospace' }}>
+              <Text size="xs" c="dimmed" className={classes.errorDetails}>
                 {error.message}
               </Text>
-            </div>
+            </Box>
           )}
 
           {import.meta.env.DEV && error.stack && (
-            <details style={{ cursor: 'pointer' }}>
+            <details className={classes.stackTraceContainer}>
               <summary>
                 <Text size="xs" component="span">
                   Stack trace (development only)
                 </Text>
               </summary>
-              <pre style={{ fontSize: '11px', overflow: 'auto', maxHeight: '200px' }}>{error.stack}</pre>
+              <Code block className={classes.stackTrace}>
+                {error.stack}
+              </Code>
             </details>
           )}
 

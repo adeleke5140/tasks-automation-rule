@@ -1,0 +1,17 @@
+.errorDetails {
+  font-family: monospace;
+}
+
+.stackTraceContainer {
+  cursor: pointer;
+}
+
+.stackTrace {
+  font-size: 11px;
+  overflow: auto;
+  max-height: 200px;
+  margin: 0;
+  padding: 0.5rem;
+  background-color: var(--mantine-color-dark-7);
+  border-radius: var(--mantine-radius-sm);
+}
