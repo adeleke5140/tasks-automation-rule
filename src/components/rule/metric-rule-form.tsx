@@ -10,31 +10,38 @@ import type { RuleTypeFormProps } from './rule-unit-form'
 import { useAppDispatch } from '@/store/hooks'
 import { updateConditionPayload } from '@/store/slices/conditionsSlice'
 
-export const MetricRuleForm = ({ id, ruleType, payload, onDelete, onChangeRuleType }: RuleTypeFormProps<'metricBased'>) => {
+export const MetricRuleForm = ({
+  id,
+  taskId,
+  ruleType,
+  payload,
+  onDelete,
+  onChangeRuleType,
+}: RuleTypeFormProps<'metricBased'>) => {
   const dispatch = useAppDispatch()
 
   const handleMetricChange = (metric: TypeMetric) => {
-    dispatch(updateConditionPayload({ id, payload: { metric } }))
+    dispatch(updateConditionPayload({ taskId, conditionId: id, payload: { metric } }))
   }
 
   const handleRangeChange = (range: TypeRange) => {
-    dispatch(updateConditionPayload({ id, payload: { range } }))
+    dispatch(updateConditionPayload({ taskId, conditionId: id, payload: { range } }))
   }
 
   const handleOperatorChange = (operator: TypeOperator) => {
-    dispatch(updateConditionPayload({ id, payload: { operator } }))
+    dispatch(updateConditionPayload({ taskId, conditionId: id, payload: { operator } }))
   }
 
   const handleComparisonWeightChange = (comparisonMetricWeight: number) => {
-    dispatch(updateConditionPayload({ id, payload: { comparisonMetricWeight } }))
+    dispatch(updateConditionPayload({ taskId, conditionId: id, payload: { comparisonMetricWeight } }))
   }
 
   const handleComparisonMetricChange = (comparisonMetric: TypeMetric) => {
-    dispatch(updateConditionPayload({ id, payload: { comparisonMetric } }))
+    dispatch(updateConditionPayload({ taskId, conditionId: id, payload: { comparisonMetric } }))
   }
 
   const handleComparisonRangeChange = (comparisonMetricRange: TypeRange) => {
-    dispatch(updateConditionPayload({ id, payload: { comparisonMetricRange } }))
+    dispatch(updateConditionPayload({ taskId, conditionId: id, payload: { comparisonMetricRange } }))
   }
 
   return (

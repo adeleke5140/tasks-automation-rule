@@ -5,18 +5,25 @@ import { RuleUnitForm } from '@/components/rule/rule-unit-form'
 import { GroupMenu } from './group-menu'
 import type { Condition } from '@/components/task/task-item'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
-import { deleteCondition, ungroupGroup, duplicateGroup, deleteGroup } from '@/store/slices/conditionsSlice'
+import {
+  deleteCondition,
+  ungroupGroup,
+  duplicateGroup,
+  deleteGroup,
+  selectTaskConditions,
+} from '@/store/slices/conditionsSlice'
 import { toggleSelection, isIdSelected } from '@/store/slices/selectionSlice'
 import classes from './condition-tree.module.scss'
 
 type ConditionTreeProps = {
   cond: Condition
+  taskId: string
   isNested?: boolean
 }
 
-export const ConditionTree = ({ cond, isNested = false }: ConditionTreeProps) => {
+export const ConditionTree = ({ cond, taskId, isNested = false }: ConditionTreeProps) => {
   const dispatch = useAppDispatch()
-  const isSelected = useAppSelector((state) => isIdSelected(state, cond.id))
+  const isSelected = useAppSelector((state) => isIdSelected(state, taskId, cond.id))
   const totalConditions = useAppSelector((state) => {
     let count = 0
     const countConditions = (items: Array<Condition>) => {
@@ -25,7 +32,8 @@ export const ConditionTree = ({ cond, isNested = false }: ConditionTreeProps) =>
         else countConditions(item.children)
       })
     }
-    countConditions(state.conditions.conditions)
+    const conditions = selectTaskConditions(state, taskId)
+    countConditions(conditions)
     return count
   })
 
@@ -39,16 +47,17 @@ export const ConditionTree = ({ cond, isNested = false }: ConditionTreeProps) =>
         })
         return
       }
-      dispatch(deleteCondition(id))
+      dispatch(deleteCondition({ taskId, conditionId: id }))
     }
 
     const handleToggleSelection = () => {
-      dispatch(toggleSelection(cond.id))
+      dispatch(toggleSelection({ taskId, conditionId: cond.id }))
     }
 
     return (
       <RuleUnitForm
         id={cond.id}
+        taskId={taskId}
         onDelete={handleDelete}
         ruleType={cond.ruleType}
         payload={cond.payload[cond.ruleType]}
@@ -56,6 +65,18 @@ export const ConditionTree = ({ cond, isNested = false }: ConditionTreeProps) =>
         isSelected={isSelected}
         onToggleSelection={handleToggleSelection}
       />
+    )
+  }
+
+  const showConnector = cond.children.length >= 2
+
+  if (!showConnector) {
+    return (
+      <Stack component={'div'} gap="md">
+        {cond.children.map((item) => {
+          return <ConditionTree key={item.id} cond={item} taskId={taskId} isNested={item.type === 'group'} />
+        })}
+      </Stack>
     )
   }
 
@@ -68,18 +89,18 @@ export const ConditionTree = ({ cond, isNested = false }: ConditionTreeProps) =>
         },
       }}
     >
-      <RelationConnector relation={cond.relation} groupId={cond.id}>
+      <RelationConnector relation={cond.relation} groupId={cond.id} taskId={taskId}>
         {isNested && (
           <GroupMenu
-            onDuplicate={() => dispatch(duplicateGroup(cond.id))}
-            onUngroup={() => dispatch(ungroupGroup(cond.id))}
-            onDelete={() => dispatch(deleteGroup(cond.id))}
+            onDuplicate={() => dispatch(duplicateGroup({ taskId, groupId: cond.id }))}
+            onUngroup={() => dispatch(ungroupGroup({ taskId, groupId: cond.id }))}
+            onDelete={() => dispatch(deleteGroup({ taskId, groupId: cond.id }))}
           />
         )}
       </RelationConnector>
       <Stack component={'div'} gap="md" className={classes.childrenStack} data-relation="true">
         {cond.children.map((item) => {
-          return <ConditionTree key={item.id} cond={item} isNested={item.type === 'group'} />
+          return <ConditionTree key={item.id} cond={item} taskId={taskId} isNested={item.type === 'group'} />
         })}
       </Stack>
     </SimpleGrid>

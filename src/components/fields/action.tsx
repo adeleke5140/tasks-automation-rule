@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
-import { selectAction, selectObjectType, setObjectType, setSelectedAction } from '@/store/slices/actionSlice'
+import { selectTaskAction, selectTaskObjectType, setObjectType, setSelectedAction } from '@/store/slices/actionSlice'
 import type { TypeTask as TypeTaskType } from '@/types/client'
 import { Box, Combobox, Group, InputBase, Menu, Text, useCombobox } from '@mantine/core'
 import { IconChevronDown } from '@tabler/icons-react'
@@ -27,11 +27,15 @@ const objectTypeLabels: Record<ObjectType, string> = {
   ad: 'Ad',
 }
 
-export const Action = () => {
+interface ActionProps {
+  taskId: string
+}
+
+export const Action = ({ taskId }: ActionProps) => {
   const combobox = useCombobox()
   const dispatch = useAppDispatch()
-  const selectedAction = useAppSelector(selectAction)
-  const objectType = useAppSelector(selectObjectType)
+  const selectedAction = useAppSelector((state) => selectTaskAction(state, taskId))
+  const objectType = useAppSelector((state) => selectTaskObjectType(state, taskId))
 
   const actionOptions: Action[] = [
     'pause',
@@ -50,7 +54,7 @@ export const Action = () => {
     <Combobox
       store={combobox}
       onOptionSubmit={(value) => {
-        dispatch(setSelectedAction(value as Action))
+        dispatch(setSelectedAction({ taskId, action: value as Action }))
         combobox.closeDropdown()
       }}
     >
@@ -75,19 +79,23 @@ export const Action = () => {
           <Group justify="space-between" wrap="nowrap">
             <Box>
               <Text size="lg" fw={500} c="m-blue.6">
-                {actionLabels[selectedAction]}
+                {actionLabels[selectedAction || 'pause']}
               </Text>
               <Box onClick={(e) => e.stopPropagation()}>
                 <Menu shadow="md" width={200}>
                   <Menu.Target>
                     <Text size="sm" c="gray.6" style={{ cursor: 'pointer' }}>
-                      {objectTypeLabels[objectType]} ▾
+                      {objectTypeLabels[objectType || 'adset']} ▾
                     </Text>
                   </Menu.Target>
                   <Menu.Dropdown>
-                    <Menu.Item onClick={() => dispatch(setObjectType('campaign'))}>Campaign</Menu.Item>
-                    <Menu.Item onClick={() => dispatch(setObjectType('adset'))}>Ad Set</Menu.Item>
-                    <Menu.Item onClick={() => dispatch(setObjectType('ad'))}>Ad</Menu.Item>
+                    <Menu.Item onClick={() => dispatch(setObjectType({ taskId, objectType: 'campaign' }))}>
+                      Campaign
+                    </Menu.Item>
+                    <Menu.Item onClick={() => dispatch(setObjectType({ taskId, objectType: 'adset' }))}>
+                      Ad Set
+                    </Menu.Item>
+                    <Menu.Item onClick={() => dispatch(setObjectType({ taskId, objectType: 'ad' }))}>Ad</Menu.Item>
                   </Menu.Dropdown>
                 </Menu>
               </Box>

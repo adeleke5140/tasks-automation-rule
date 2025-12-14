@@ -12,6 +12,7 @@ import { updateConditionPayload } from '@/store/slices/conditionsSlice'
 
 export const ValueRuleForm = ({
   id,
+  taskId,
   ruleType,
   payload,
   onDelete,
@@ -27,19 +28,19 @@ export const ValueRuleForm = ({
   const dispatch = useAppDispatch()
 
   const handleMetricChange = (metric: TypeMetric) => {
-    dispatch(updateConditionPayload({ id, payload: { metric } }))
+    dispatch(updateConditionPayload({ taskId, conditionId: id, payload: { metric } }))
   }
 
   const handleRangeChange = (range: TypeRange) => {
-    dispatch(updateConditionPayload({ id, payload: { range } }))
+    dispatch(updateConditionPayload({ taskId, conditionId: id, payload: { range } }))
   }
 
   const handleOperatorChange = (operator: TypeOperator) => {
-    dispatch(updateConditionPayload({ id, payload: { operator } }))
+    dispatch(updateConditionPayload({ taskId, conditionId: id, payload: { operator } }))
   }
 
   const handleValueChange = (value: number) => {
-    dispatch(updateConditionPayload({ id, payload: { value } }))
+    dispatch(updateConditionPayload({ taskId, conditionId: id, payload: { value } }))
   }
 
   return (

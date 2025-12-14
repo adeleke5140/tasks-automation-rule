@@ -6,16 +6,17 @@ import { updateRelation } from '@/store/slices/conditionsSlice'
 interface RelationConnectorProps {
   relation: TypeRuleUnit['relation']
   groupId: string
+  taskId: string
   children?: React.ReactNode
 }
 
-export const RelationConnector = ({ relation, groupId, children }: RelationConnectorProps) => {
+export const RelationConnector = ({ relation, groupId, taskId, children }: RelationConnectorProps) => {
   const dispatch = useAppDispatch()
 
   const handleToggleRelation = () => {
     if (!relation) return
     const newRelation = relation === 'and' ? 'or' : 'and'
-    dispatch(updateRelation({ id: groupId, relation: newRelation }))
+    dispatch(updateRelation({ taskId, groupId, relation: newRelation }))
   }
 
   return (

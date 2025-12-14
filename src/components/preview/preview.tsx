@@ -1,9 +1,14 @@
 import { Box, Group, Stack, Text } from '@mantine/core'
 import { useAppSelector } from '@/store/hooks'
-import { getObjectTypeDisplay } from '@/store/slices/actionSlice'
+import { selectTaskConditions } from '@/store/slices/conditionsSlice'
+import { selectTaskAction, selectTaskObjectType, getObjectTypeDisplay } from '@/store/slices/actionSlice'
 import { metricLabels, operatorLabels, rangeLabels } from '@/utils/labels'
 import classes from './preview.module.scss'
 import type { Condition, RuleItem } from '@/components/task/task-item'
+
+interface PreviewProps {
+  taskId: string
+}
 
 const getValueBasedText = (item: RuleItem) => {
   if (!item.payload.valueBased) return ''
@@ -13,12 +18,17 @@ const getValueBasedText = (item: RuleItem) => {
 
 const getMetricBasedText = (item: RuleItem) => {
   if (!item.payload.metricBased) return ''
-  const { metric, comparisonMetric, operator, comparisonMetricWeight, comparisonMetricRange } = item.payload.metricBased
-  const baseMetric = metricLabels[metric] || metric
-  const comparison = comparisonMetric ? metricLabels[comparisonMetric] || comparisonMetric : ''
-  const op = operatorLabels[operator] || operator
-  const range = comparisonMetricRange ? rangeLabels[comparisonMetricRange] || comparisonMetricRange : ''
-  return `${baseMetric} is ${comparisonMetricWeight}% ${op} than ${comparison} ${range}`
+  const { metric, range, comparisonMetric, operator, comparisonMetricWeight, comparisonMetricRange } =
+    item.payload.metricBased
+
+  const baseMetric = metricLabels[metric] || metric || 'cost'
+  const baseRange = rangeLabels[range] || range || ''
+  const comparison = metricLabels[comparisonMetric] || comparisonMetric || 'cost'
+  const op = operatorLabels[operator] || operator || 'eq'
+  const weight = comparisonMetricWeight ?? 0
+  const compRange = rangeLabels[comparisonMetricRange] || comparisonMetricRange || 'last_30_days'
+
+  return `${baseMetric} ${baseRange} is ${weight}% ${op} than ${comparison} ${compRange}`
 }
 
 const getConditionText = (item: RuleItem) => {
@@ -62,12 +72,12 @@ const RenderConditionTree = ({ items, depth = 0 }: { items: Array<Condition>; de
   )
 }
 
-export const Preview = () => {
-  const conditions = useAppSelector((state) => state.conditions.conditions)
-  const selectedAction = useAppSelector((state) => state.action.selectedAction)
-  const objectType = useAppSelector((state) => state.action.objectType)
+export const Preview = ({ taskId }: PreviewProps) => {
+  const conditions = useAppSelector((state) => selectTaskConditions(state, taskId))
+  const selectedAction = useAppSelector((state) => selectTaskAction(state, taskId))
+  const objectType = useAppSelector((state) => selectTaskObjectType(state, taskId))
 
-  const actionDisplay = selectedAction.replace(/_/g, ' ')
+  const actionDisplay = (selectedAction || 'pause').replace(/_/g, ' ')
 
   if (conditions.length === 0) {
     return (
@@ -88,7 +98,7 @@ export const Preview = () => {
           {actionDisplay} -
         </Text>
         <Text size="sm" c="gray.6">
-          ({getObjectTypeDisplay(objectType)})
+          ({getObjectTypeDisplay(objectType || 'adset')})
         </Text>
       </Group>
 

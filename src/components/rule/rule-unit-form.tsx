@@ -12,6 +12,7 @@ export type SelectableProps = {
 
 export type RuleTypeFormProps<T extends RuleType> = {
   id: string
+  taskId: string
   ruleType: T
   payload: RuleValues[T]['payload']
   onDelete: (id: string) => void
@@ -20,6 +21,7 @@ export type RuleTypeFormProps<T extends RuleType> = {
 
 export type RuleUnitFormProps<T extends RuleType = RuleType> = {
   id: string
+  taskId: string
   onDelete: (id: string) => void
   ruleType: T
   payload: Payload[T]
@@ -30,11 +32,12 @@ export const RuleUnitForm = (props: RuleUnitFormProps) => {
 
   const formProps = {
     id: props.id,
+    taskId: props.taskId,
     ruleType: props.ruleType,
     payload: props.payload,
     onDelete: props.onDelete,
     onChangeRuleType: (newRuleType: RuleType) => {
-      dispatch(changeRuleType({ id: props.id, ruleType: newRuleType }))
+      dispatch(changeRuleType({ taskId: props.taskId, conditionId: props.id, ruleType: newRuleType }))
     },
     isSelectable: props.isSelectable,
     isSelected: props.isSelected,
