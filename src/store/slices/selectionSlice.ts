@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import { deleteTask } from './tasksSlice'
+import { deleteTask, INITIAL_TASK_ID } from './tasksSlice'
 
 interface SelectionState {
   byTaskId: Record<string, string[]>
@@ -7,7 +7,7 @@ interface SelectionState {
 
 const initialState: SelectionState = {
   byTaskId: {
-    'task-1': [],
+    [INITIAL_TASK_ID]: [],
   },
 }
 
@@ -37,7 +37,6 @@ const selectionSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // Clean up selection when a task is deleted
     builder.addCase(deleteTask, (state, action) => {
       delete state.byTaskId[action.payload]
     })
@@ -46,7 +45,6 @@ const selectionSlice = createSlice({
 
 export const { toggleSelection, clearSelection } = selectionSlice.actions
 
-// Selectors
 export const selectTaskSelectedIds = (state: { selection: SelectionState }, taskId: string) =>
   state.selection.byTaskId[taskId] || []
 
