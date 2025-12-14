@@ -202,10 +202,13 @@ const conditionsSlice = createSlice({
             if (item.id === action.payload.groupId) {
               result.push(...item.children)
             } else {
-              result.push({
+              const updatedGroup = {
                 ...item,
                 children: ungroupById(item.children),
-              })
+              }
+              if (updatedGroup.children.length > 0) {
+                result.push(updatedGroup)
+              }
             }
           } else {
             result.push(item)
@@ -283,6 +286,12 @@ const conditionsSlice = createSlice({
               }
             }
             return item
+          })
+          .filter((item) => {
+            if (item.type === 'group') {
+              return item.children.length > 0
+            }
+            return true
           })
       }
 
