@@ -2,6 +2,7 @@ import { Combobox, Group, Paper, Text, useCombobox, Checkbox } from '@mantine/co
 import { IconChevronDown } from '@tabler/icons-react'
 import type { TypeMetric } from '@/types/client'
 import { metricLabels } from '@/utils/labels'
+import styles from './metric.module.scss'
 
 const metricOptions: TypeMetric[] = [
   'cost',
@@ -44,11 +45,7 @@ export const Metric = ({ selectedMetric, onMetricChange, isComparison, isSelecta
     >
       <Combobox.Target>
         <Paper
-          style={{
-            borderRight: '1px solid #C6C6C6',
-            borderTopLeftRadius: '4px',
-            borderBottomLeftRadius: '4px',
-          }}
+          className={styles.metricPaper}
           p="md"
           bg="white"
           shadow="sm"
@@ -65,15 +62,13 @@ export const Metric = ({ selectedMetric, onMetricChange, isComparison, isSelecta
                   onToggleSelection()
                 }}
                 onClick={(e) => e.stopPropagation()}
-                styles={{
-                  input: {
-                    cursor: 'pointer'
-                  }
+                classNames={{
+                  input: styles.checkboxInput
                 }}
               />
             ) : null}
 
-            <Group justify="space-between" wrap="nowrap" gap="xs" style={{ flex: 1 }}>
+            <Group justify="space-between" wrap="nowrap" gap="xs" className={styles.metricGroup}>
               <Text size="sm">{metricLabels[selectedMetric]}</Text>
               <IconChevronDown size={16} color="var(--mantine-color-gray-5)" />
             </Group>
