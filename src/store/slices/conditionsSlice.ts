@@ -18,7 +18,7 @@ const createInitialConditions = (): Array<Condition> => [
     id: newId('root'),
     type: 'group',
     relation: 'and',
-    children: [{ ...sampleItem, id: newId('condition') }],
+    children: [sampleItem],
   },
 ]
 
