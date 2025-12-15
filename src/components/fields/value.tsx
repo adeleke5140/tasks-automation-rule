@@ -1,9 +1,9 @@
-import { Group, Paper } from '@mantine/core'
+import { Group, Paper, TextInput } from '@mantine/core'
 import type { TypeMetric } from '@/types/client'
 
 interface ValueProps {
   selectedMetric: TypeMetric
-  selectedValue: number
+  selectedValue: number | string
   onValueChange: (item: number) => void
   children: React.ReactNode
 }
@@ -15,7 +15,7 @@ export const Value = ({ selectedMetric, selectedValue, onValueChange, children }
 
   return (
     <Paper
-      p="md"
+      p="xs"
       bg="white"
       shadow="sm"
       radius="0"
@@ -23,29 +23,24 @@ export const Value = ({ selectedMetric, selectedValue, onValueChange, children }
       style={{ borderTopRightRadius: '4px', borderBottomRightRadius: '4px' }}
     >
       <Group align="center" justify="space-between" gap={8}>
-        <input
+        <TextInput
           type="number"
           value={selectedValue}
-          onChange={(e) => {
-            const value = e.target.value
-            if (value === '') {
-              onValueChange(0)
-            } else {
-              const numValue = parseFloat(value)
-              if (!isNaN(numValue) && numValue >= 0) {
-                onValueChange(numValue)
-              }
-            }
+          onChange={(event) => {
+            const value = event.currentTarget.value
+            onValueChange(Number(value))
           }}
-          min="0"
-          step="0.01"
+          min={0}
+          step={10}
           placeholder={showCurrencySign ? '$' : '0'}
-          style={{
-            border: 'none',
-            outline: 'none',
-            background: 'transparent',
-            color: 'var(--mantine-color-gray-7)',
-            fontSize: 'var(--mantine-font-size-sm)',
+          variant="unstyled"
+          inputMode="decimal"
+          styles={{
+            input: {
+              color: 'var(--mantine-color-gray-7)',
+              fontSize: 'var(--mantine-font-size-sm)',
+              backgroundColor: 'transparent',
+            },
           }}
         />
         <Group gap="xs" wrap="nowrap">

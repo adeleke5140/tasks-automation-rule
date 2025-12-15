@@ -21,10 +21,10 @@ export const RangeMetric = ({ selectedRange, onRangeChange, children, isComparis
       bg="white"
       shadow="sm"
       radius="0"
-      flex={1}
+      flex={1.5}
       style={{ borderRight: isComparison ? '' : '1px solid #c6c6c6' }}
     >
-      <Group align="center" justify="space-between" gap={0} flex={1.5}>
+      <Group align="center" justify="space-between" gap={0}>
         <Combobox
           store={rangeCombobox}
           onOptionSubmit={(value) => {
