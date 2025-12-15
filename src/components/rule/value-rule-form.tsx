@@ -60,7 +60,7 @@ export const ValueRuleForm = ({
           <Operator selectedOperator={payload?.operator || 'lt'} onOperatorChange={handleOperatorChange} />
           <Value
             selectedMetric={payload?.metric || 'cost'}
-            selectedValue={payload?.value || 0}
+            selectedValue={payload?.value || ''}
             onValueChange={handleValueChange}
           >
             <RuleSelector ruleType={ruleType} setRuleType={onChangeRuleType} onDelete={() => onDelete(id)} />
