@@ -1,4 +1,5 @@
 import { Paper } from '@mantine/core'
+import styles from './metric-weight.module.scss'
 
 export const MetricWeight = ({
   weight,
@@ -8,14 +9,7 @@ export const MetricWeight = ({
   onWeightChange: (item: number) => void
 }) => {
   return (
-    <Paper
-      p="md"
-      bg="white"
-      shadow="sm"
-      radius="0"
-      w={80}
-      style={{ minWidth: 40, display: 'flex', alignItems: 'center', gap: '8px', borderRight: '1px solid #C6C6C6' }}
-    >
+    <Paper p="md" bg="white" shadow="sm" radius="0" w={80} className={styles.weightPaper}>
       <input
         type="number"
         value={weight}
@@ -35,16 +29,7 @@ export const MetricWeight = ({
         step="0.1"
         placeholder="0"
         aria-label="Weight"
-        style={{
-          border: 'none',
-          outline: 'none',
-          background: 'transparent',
-          color: 'var(--mantine-color-gray-7)',
-          fontSize: 'var(--mantine-font-size-sm)',
-          padding: 0,
-          flex: 1,
-          minWidth: 0,
-        }}
+        className={styles.weightInput}
       />
     </Paper>
   )
