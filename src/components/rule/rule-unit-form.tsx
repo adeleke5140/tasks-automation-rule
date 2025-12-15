@@ -45,15 +45,7 @@ export const RuleUnitForm = (props: RuleUnitFormProps) => {
   }
 
   if (props.ruleType === 'metricBased') {
-    return (
-      <MetricRuleForm
-        {...(formProps as RuleTypeFormProps<'metricBased'> & SelectableProps)}
-      />
-    )
+    return <MetricRuleForm {...(formProps as RuleTypeFormProps<'metricBased'> & SelectableProps)} />
   }
-  return (
-    <ValueRuleForm
-      {...(formProps as RuleTypeFormProps<'valueBased'> & SelectableProps)}
-    />
-  )
+  return <ValueRuleForm {...(formProps as RuleTypeFormProps<'valueBased'> & SelectableProps)} />
 }
